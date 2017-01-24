@@ -1,0 +1,14 @@
+﻿CREATE TABLE "Folders" 
+(
+    "Id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+    "Name" NVARCHAR(100),
+    "Path" NVARCHAR(1000),
+    "IconPath" NVARCHAR(1000),
+    "Comment" NVARCHAR(2000),
+    "Shortcut" NVARCHAR(20),
+    "GroupId" INT,
+    "Error" BOOL DEFAULT (0) ,
+    "ShowInContextMenu" BOOL DEFAULT (0) ,
+    "ImageIndex" INT,
+    "ColorCode" NVARCHAR(20)
+)
