@@ -14,5 +14,9 @@
         /// Gets the create statement for the group table
         /// </summary>
         public static string CreateTableGroup => ScriptFiles.ResourceManager.GetString("CreateTable_Groups");
+        /// <summary>
+        /// Gets the create statement for the file table
+        /// </summary>
+        public static string CreateTableFiles => ScriptFiles.ResourceManager.GetString("CreateTable_Files");
     }
 }

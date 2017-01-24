@@ -5,7 +5,7 @@ using Dapper;
 
 namespace AppzManagerV4.Data
 {
-    class FolderRepo
+    public class FolderRepo
     {
         /// <summary>
         /// Contains the database manager
@@ -69,7 +69,7 @@ namespace AppzManagerV4.Data
         /// </summary>
         /// <param name="folder">The folder</param>
         /// <returns>true if successful, otherwise false</returns>
-        public bool UpdateApp(FolderModel folder)
+        public bool UpdateFolder(FolderModel folder)
         {
             const string query = "UPDATE Folders " +
                                  "SET Name = @name, " +

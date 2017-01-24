@@ -32,9 +32,14 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private List<FolderModel> _folderList;
         /// <summary>
+        /// Contains the file list
+        /// </summary>
+        private List<FileModel> _fileList;
+        /// <summary>
         /// Contains the groups
         /// </summary>
         private List<GroupModel> _groupList;
+
         /// <summary>
         /// Contains the new entry delegate
         /// </summary>
@@ -60,6 +65,7 @@ namespace AppzManagerV4.Forms
             {
                 listViewApps.View = View.LargeIcon;
                 listViewFolders.View = View.LargeIcon;
+                listViewFiles.View = View.LargeIcon;
                 viewMenuIcons.Checked = true;
                 viewMenuList.Checked = false;
             }
@@ -67,6 +73,7 @@ namespace AppzManagerV4.Forms
             {
                 listViewApps.View = View.Details;
                 listViewFolders.View = View.Details;
+                listViewFiles.View = View.Details;
                 viewMenuIcons.Checked = false;
                 viewMenuList.Checked = true;
             }
@@ -78,7 +85,9 @@ namespace AppzManagerV4.Forms
         {
             _appList = _dataManager.GetApps();
             _folderList = _dataManager.GetFolder();
+            _fileList = _dataManager.GetFiles();
             _groupList = _dataManager.GetGroups();
+
 
             ShowEntries();
         }
@@ -89,11 +98,13 @@ namespace AppzManagerV4.Forms
         {
             listViewApps.Items.Clear();
             listViewFolders.Items.Clear();
+            listViewFiles.Items.Clear();
 
             imageList.Images.Clear();
 
             listViewApps.Groups.Clear();
             listViewFolders.Groups.Clear();
+            listViewFiles.Groups.Clear();
         }
         /// <summary>
         /// Shows the entries
@@ -117,6 +128,8 @@ namespace AppzManagerV4.Forms
             FormManager.CreateListView(ref listViewApps, ref _appList, imageList);
             // Add the folder
             FormManager.CreateListView(ref listViewFolders, ref _folderList, imageList);
+            // Add the files
+            FormManager.CreateListView(ref listViewFiles, ref _fileList, imageList);
 
             CreateNotifyMenu();
 
@@ -131,7 +144,7 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void CreateNotifyMenu()
         {
-            FormManager.CreateNotifyIcon(ref contextMenuNotify, _appList, _folderList, _groupList, imageList, Icon);
+            FormManager.CreateNotifyIcon(ref contextMenuNotify, _appList, _folderList, _fileList, _groupList, imageList, Icon);
 
             foreach (var item in contextMenuNotify.Items.OfType<ToolStripMenuItem>())
             {
@@ -156,6 +169,7 @@ namespace AppzManagerV4.Forms
         {
             var listFolder = new List<string>();
             var listApp = new List<string>();
+            var listFiles = new List<string>();
 
             foreach (var file in fileList)
             {
@@ -163,7 +177,7 @@ namespace AppzManagerV4.Forms
                 {
                     listFolder.Add(file);
                 }
-                else
+                else if (Functions.IsApplication(file))
                 {
                     var filePath = "";
                     switch (Functions.GetFileExtension(file))
@@ -184,12 +198,19 @@ namespace AppzManagerV4.Forms
                     }
                     listApp.Add(filePath);
                 }
+                else
+                {
+                    listFiles.Add(file);
+                }
 
                 if (listApp.Any())
                     BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.App, listApp);
 
                 if (listFolder.Any())
                     BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.Folder, listFolder);
+
+                if (listFiles.Any())
+                    BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.File, listFiles);
             }
 
             LoadEntries();
@@ -209,6 +230,9 @@ namespace AppzManagerV4.Forms
                 case GlobalEnums.RegionType.Folder:
                     FormManager.CreateNewEntry(region, _folderList, filepathList);
                     break;
+                case GlobalEnums.RegionType.File:
+                    FormManager.CreateNewEntry(region, _fileList, filepathList);
+                    break;
             }
 
             LoadEntries();
@@ -221,14 +245,20 @@ namespace AppzManagerV4.Forms
         private void EditEntry(GlobalEnums.RegionType region, object entry)
         {
             var result = false;
-            if (region == GlobalEnums.RegionType.App)
+            switch (region)
             {
-                result = FormManager.EditEntry(region, _appList, entry);
+                case GlobalEnums.RegionType.App:
+                    result = FormManager.EditEntry(region, _appList, entry);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    result = FormManager.EditEntry(region, _folderList, entry);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    result = FormManager.EditEntry(region, _fileList, entry);
+                    break;
             }
-            else if (region == GlobalEnums.RegionType.Folder)
-            {
-                result = FormManager.EditEntry(region, _folderList, entry);
-            }
+
+
             if (result)
                 LoadEntries();
         }
@@ -244,14 +274,19 @@ namespace AppzManagerV4.Forms
                 return;
 
             var result = false;
-            if (region == GlobalEnums.RegionType.App)
+            switch (region)
             {
-                result = _dataManager.DeleteApp(id);
+                case GlobalEnums.RegionType.App:
+                    result = _dataManager.DeleteApp(id);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    result = _dataManager.DeleteFolder(id);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    result = _dataManager.DeleteFile(id);
+                    break;
             }
-            else if (region == GlobalEnums.RegionType.Folder)
-            {
-                result = _dataManager.DeleteFolder(id);
-            }
+
             if (result)
                 LoadEntries();
         }
@@ -268,13 +303,14 @@ namespace AppzManagerV4.Forms
             {
                 var app = menuItem.Tag as AppModel;
                 var folder = menuItem.Tag as FolderModel;
+                var file = menuItem.Tag as FileModel;
 
-                if (app == null && folder == null && menuItem.Name == "CloseItem")
+                if (menuItem.Name == "CloseItem")
                 {
                     Application.Exit();
                 }
 
-                if (app == null && folder == null)
+                if (app == null && folder == null && file == null)
                 {
                     switch (menuItem.Name)
                     {
@@ -297,9 +333,13 @@ namespace AppzManagerV4.Forms
                 {
                     Functions.OpenExecute(app);
                 }
-                else
+                else if (folder != null)
                 {
                     Functions.OpenExecute(folder);
+                }
+                else
+                {
+                    Functions.OpenExecute(file);
                 }
             }
         }
@@ -330,6 +370,8 @@ namespace AppzManagerV4.Forms
                 region = GlobalEnums.RegionType.App;
             else if (tabControl.SelectedTab == tabPageFolders)
                 region = GlobalEnums.RegionType.Folder;
+            else if (tabControl.SelectedTab == tabPageFiles)
+                region = GlobalEnums.RegionType.File;
 
             CreateNewEntry(region);
         }

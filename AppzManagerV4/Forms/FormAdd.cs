@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AppzManagerV4.Business;
 using AppzManagerV4.DataObjects;
@@ -19,7 +15,7 @@ namespace AppzManagerV4.Forms
         /// <summary>
         /// Contains the data manager
         /// </summary>
-        private DataManager _manager = new DataManager();
+        private readonly DataManager _manager = new DataManager();
         /// <summary>
         /// Contains the application / folder path
         /// </summary>
@@ -37,6 +33,10 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private List<FolderModel> _folderList;
         /// <summary>
+        /// Contains the file list
+        /// </summary>
+        private List<FileModel> _fileList;
+        /// <summary>
         /// Contains the group list
         /// </summary>
         private List<GroupModel> _groupList;
@@ -49,9 +49,13 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private FolderModel _folder;
         /// <summary>
+        /// Contains the current file
+        /// </summary>
+        private FileModel _file;
+        /// <summary>
         /// Contains the current region
         /// </summary>
-        private readonly GlobalEnums.RegionType _type;
+        private readonly GlobalEnums.RegionType _region;
         /// <summary>
         /// Contains the used shortcuts
         /// </summary>
@@ -65,28 +69,35 @@ namespace AppzManagerV4.Forms
         /// <summary>
         /// Creates a new instance of the form
         /// </summary>
-        /// <param name="type">The type</param>
+        /// <param name="region">The region</param>
         /// <param name="entryList">The entry list</param>
         /// <param name="entry">The current entry (optional, default = null)</param>
-        public FormAdd(GlobalEnums.RegionType type, object entryList, object entry = null)
+        public FormAdd(GlobalEnums.RegionType region, object entryList, object entry = null)
         {
             InitializeComponent();
 
-            _type = type;
+            _region = region;
 
-            if (type == GlobalEnums.RegionType.App)
+            if (region == GlobalEnums.RegionType.App)
             {
                 _app = entry as AppModel;
                 _appList = entryList as List<AppModel>;
                 if (_appList != null)
                     _usedShortcuts = _appList.Select(s => s.Shortcut).ToList();
             }
-            else
+            else if (region == GlobalEnums.RegionType.Folder)
             {
                 _folder = entry as FolderModel;
                 _folderList = entryList as List<FolderModel>;
                 if (_folderList != null)
                     _usedShortcuts = _folderList.Select(s => s.Shortcut).ToList();
+            }
+            else if (region == GlobalEnums.RegionType.File)
+            {
+                _file = entry as FileModel;
+                _fileList = entryList as List<FileModel>;
+                if (_fileList != null)
+                    _usedShortcuts = _fileList.Select(s => s.Shortcut).ToList();
             }
         }
         /// <summary>
@@ -124,42 +135,41 @@ namespace AppzManagerV4.Forms
             }
 
             var infoMsg = "";
-            switch (_type)
+            if (_region == GlobalEnums.RegionType.App || _region == GlobalEnums.RegionType.Folder ||
+                _region == GlobalEnums.RegionType.File)
+            {
+                txtName.Enabled = true;
+                txtPath.Enabled = true;
+                btnBrowsePath.Enabled = true;
+                txtShortcut.Enabled = true;
+                txtComment.Enabled = true;
+                comboGroup.Enabled = true;
+                btnAddGroup.Enabled = true;
+                btnColerChooser.Enabled = true;
+                checkShowInContextMenu.Enabled = true;
+            }
+
+            switch (_region)
             {
                 case GlobalEnums.RegionType.App:
-                    txtName.Enabled = true;
-                    txtPath.Enabled = true;
-                    btnBrowsePath.Enabled = true;
                     txtExecuteIn.Enabled = true;
                     btnBrowseExecuteIn.Enabled = true;
                     txtParameter.Enabled = true;
                     txtVersion.Enabled = true;
-                    txtShortcut.Enabled = true;
-                    txtComment.Enabled = true;
-                    comboGroup.Enabled = true;
-                    btnAddGroup.Enabled = true;
-                    btnColerChooser.Enabled = true;
-                    checkShowInContextMenu.Enabled = true;
                     checkAutostart.Enabled = true;
 
                     btnChangeIcon.Enabled = true;
                     btnDeleteIcon.Enabled = true;
                     break;
                 case GlobalEnums.RegionType.Folder:
-                    txtName.Enabled = true;
-                    txtPath.Enabled = true;
-                    btnBrowsePath.Enabled = true;
-                    txtShortcut.Enabled = true;
-                    txtComment.Enabled = true;
-                    comboGroup.Enabled = true;
-                    btnAddGroup.Enabled = true;
-                    btnColerChooser.Enabled = true;
-                    checkShowInContextMenu.Enabled = true;
-
                     btnChangeIcon.Enabled = true;
                     btnDeleteIcon.Enabled = true;
 
-                    infoMsg = "Nur für Anwendungen verfügbar.";
+                    infoMsg = "Für Ordner nicht verfügbar.";
+                    break;
+                case GlobalEnums.RegionType.File:
+
+                    infoMsg = "Für Dateien nicht verfügbar.";
                     break;
             }
 
@@ -186,18 +196,11 @@ namespace AppzManagerV4.Forms
         {
             if (_app != null)
             {
-                Text = "Eintrag bearbeiten";
-                txtName.Text = _app.Name;
-                txtPath.Text = _app.Path;
+                SetGeneralValues(_app);
                 txtExecuteIn.Text = _app.ExecuteIn;
                 txtParameter.Text = _app.Parameter;
                 txtVersion.Text = _app.Version;
-                txtShortcut.Text = _app.Shortcut;
-                txtComment.Text = _app.Comment;
                 checkAutostart.Checked = _app.Autostart;
-                checkShowInContextMenu.Checked = _app.ShowInContextMenu;
-
-                comboGroup.SelectedItem = _groupList.FirstOrDefault(f => f.Id == _app.GroupId);
 
                 if (string.IsNullOrEmpty(_app.IconPath))
                 {
@@ -208,9 +211,6 @@ namespace AppzManagerV4.Forms
                     pictureBoxIcon.ImageLocation = _app.IconPath;
                     _customIcon = true;
                 }
-
-                lblColorData.BackColor = _app.ColorCode.ToColor();
-                lblColorData.ForeColor = Functions.GetContrastColor(lblColorData.BackColor);
             }
             else if (!string.IsNullOrEmpty(_path))
             {
@@ -230,14 +230,7 @@ namespace AppzManagerV4.Forms
         {
             if (_folder != null)
             {
-                Text = "Eintrag bearbeiten";
-                txtName.Text = _folder.Name;
-                txtPath.Text = _folder.Path;
-                txtShortcut.Text = _folder.Shortcut;
-                txtComment.Text = _folder.Comment;
-                checkShowInContextMenu.Checked = _folder.ShowInContextMenu;
-
-                comboGroup.SelectedItem = _groupList.FirstOrDefault(f => f.Id == _folder.GroupId);
+                SetGeneralValues(_folder);
 
                 if (string.IsNullOrEmpty(_folder.IconPath))
                 {
@@ -248,9 +241,6 @@ namespace AppzManagerV4.Forms
                     pictureBoxIcon.ImageLocation = _folder.IconPath;
                     _customIcon = true;
                 }
-
-                lblColorData.BackColor = _folder.ColorCode.ToColor();
-                lblColorData.ForeColor = Functions.GetContrastColor(lblColorData.BackColor);
             }
             else if (!string.IsNullOrEmpty(_path))
             {
@@ -259,6 +249,45 @@ namespace AppzManagerV4.Forms
                 txtPath.Text = dirInfo.FullName;
                 pictureBoxIcon.Image = Properties.Resources.Stuffed_Folder;
             }
+        }
+        /// <summary>
+        /// Sets the file values
+        /// </summary>
+        private void SetValuesFile()
+        {
+            if (_file != null)
+            {
+                SetGeneralValues(_file);
+                pictureBoxIcon.Image = Functions.GetFileIcon(_file.Path);
+
+            }
+            else if (!string.IsNullOrEmpty(_path))
+            {
+                var fileInfo = new FileInfo(_path);
+                txtName.Text = fileInfo.Name.Replace(fileInfo.Extension, "");
+                txtExecuteIn.Text = fileInfo.DirectoryName;
+                txtPath.Text = _path;
+                pictureBoxIcon.Image = Functions.GetFileIcon(_path);
+            }
+            else
+                pictureBoxIcon.Image = Properties.Resources.File_Default;
+        }
+        /// <summary>
+        /// Sets the general values
+        /// </summary>
+        /// <param name="entry">The entry</param>
+        private void SetGeneralValues(dynamic entry)
+        {
+            Text = "Eintrag bearbeiten";
+            txtName.Text = entry.Name;
+            txtPath.Text = entry.Path;
+            txtShortcut.Text = entry.Shortcut;
+            txtComment.Text = entry.Comment;
+            checkShowInContextMenu.Checked = entry.ShowInContextMenu;
+
+            comboGroup.SelectedItem = _groupList.FirstOrDefault(f => f.Id == entry.GroupId);
+            lblColorData.BackColor = Functions.StringToColor(entry.ColorCode);
+            lblColorData.ForeColor = Functions.GetContrastColor(lblColorData.BackColor);
         }
         /// <summary>
         /// Saves an app
@@ -331,9 +360,40 @@ namespace AppzManagerV4.Forms
             }
         }
         /// <summary>
+        /// Saves a file
+        /// </summary>
+        /// <param name="saveAndClose">true if the form should closes (optional, default = false)</param>
+        private void SaveEntryFile(bool saveAndClose = false)
+        {
+            if (ValidInput())
+            {
+                var groupId = comboGroup.SelectedItem as GroupModel;
+                var file = new FileModel
+                {
+                    Name = txtName.Text,
+                    Path = txtPath.Text,
+                    Shortcut = txtShortcut.Text,
+                    Comment = txtComment.Text,
+                    GroupId = groupId?.Id ?? 1,
+                    ShowInContextMenu = checkShowInContextMenu.Checked,
+                    ColorCode = lblColorData.BackColor.ToRgbString()
+                };
+
+                if (_file != null)
+                    file.Id = _file.Id;
+
+                _file = file;
+
+                var result = ShowMessage(_manager.SaveFile(_file));
+
+                if (saveAndClose && result)
+                    DialogResult = DialogResult.OK;
+            }
+        }
+        /// <summary>
         /// Shows a message
         /// </summary>
-        /// <param name="returnType">The return type</param>
+        /// <param name="returnType">The return region</param>
         /// <returns>true if successful, otherwise false</returns>
         private bool ShowMessage(bool returnType)
         {
@@ -416,10 +476,18 @@ namespace AppzManagerV4.Forms
         private void FormAdd_Load(object sender, EventArgs e)
         {
             InitForm();
-            if (_type == GlobalEnums.RegionType.App)
-                SetValuesApp();
-            else 
-                SetValuesFolder();
+            switch (_region)
+            {
+                case GlobalEnums.RegionType.App:
+                    SetValuesApp();
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    SetValuesFolder();
+                    break;
+                case GlobalEnums.RegionType.File:
+                    SetValuesFile();
+                    break;
+            }
         }
         /// <summary>
         /// Occurs when the user hits one of the browse buttons
@@ -445,7 +513,7 @@ namespace AppzManagerV4.Forms
                     }
                     break;
                 case "btnBrowsePath":
-                    if (_type == GlobalEnums.RegionType.App)
+                    if (_region == GlobalEnums.RegionType.App)
                     {
                         var diagFolder = new OpenFileDialog
                         {
@@ -504,10 +572,18 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (_type == GlobalEnums.RegionType.App)
-                SaveEntryApp();
-            else
-                SaveEntryFolder();
+            switch (_region)
+            {
+                case GlobalEnums.RegionType.App:
+                    SaveEntryApp();
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    SaveEntryFolder();
+                    break;
+                case GlobalEnums.RegionType.File:
+                    SaveEntryFile();
+                    break;
+            }
         }
         /// <summary>
         /// Occurs when the user hits the add group button
@@ -538,10 +614,18 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void btnSaveClose_Click(object sender, EventArgs e)
         {
-            if (_type == GlobalEnums.RegionType.App)
-                SaveEntryApp(true);
-            else
-                SaveEntryFolder(true);
+            switch (_region)
+            {
+                case GlobalEnums.RegionType.App:
+                    SaveEntryApp(true);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    SaveEntryFolder(true);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    SaveEntryFile(true);
+                    break;
+            }
         }
         /// <summary>
         /// Occurs when the user hits the clear button

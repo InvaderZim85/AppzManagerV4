@@ -8,7 +8,10 @@ using System.Reflection;
 using System.Windows.Forms;
 using AppzManagerV4.Business;
 using AppzManagerV4.DataObjects;
+using AppzManagerV4.Properties;
+using IWshRuntimeLibrary;
 using TAFactory.IconPack;
+using File = System.IO.File;
 
 namespace AppzManagerV4.Global
 {
@@ -22,11 +25,11 @@ namespace AppzManagerV4.Global
         public static Image ExtractIcon(string filepath)
         {
             if (!File.Exists(filepath))
-                return Properties.Resources.NoIcon;
+                return Resources.NoIcon;
 
             var iconList = IconHelper.ExtractAllIcons(filepath);
 
-            return iconList == null || !iconList.Any() ? Properties.Resources.NoIcon : iconList[0].ToBitmap();
+            return iconList == null || !iconList.Any() ? Resources.NoIcon : iconList[0].ToBitmap();
         }
         /// <summary>
         /// Extracts the version of an application
@@ -49,7 +52,7 @@ namespace AppzManagerV4.Global
 
             var fileInfo = new FileInfo(filepath);
 
-            var destfolder = Path.Combine(Properties.Settings.Default.BaseFolder, "Icons");
+            var destfolder = Path.Combine(Settings.Default.BaseFolder, "Icons");
             if (!Directory.Exists(destfolder))
                 Directory.CreateDirectory(destfolder);
 
@@ -75,6 +78,17 @@ namespace AppzManagerV4.Global
             {
                 return false;
             }
+        }
+        /// <summary>
+        /// Checks if the path is an application
+        /// </summary>
+        /// <param name="path">The path of the entry</param>
+        /// <returns>true if the path is an application, otherwise false</returns>
+        public static bool IsApplication(string path)
+        {
+            var extension = GetFileExtension(path);
+
+            return extension.Contains("exe") || extension.Contains("lnk");
         }
         /// <summary>
         /// Opens or executes an application / folder
@@ -147,10 +161,7 @@ namespace AppzManagerV4.Global
         /// <returns>true if successful, otherwise false</returns>
         public static bool OpenExecute(AppModel app, bool execute = true)
         {
-            if (app == null)
-                return false;
-
-            return OpenExecute(app.Path, execute, app.Parameter, app.ExecuteIn);
+            return app != null && OpenExecute(app.Path, execute, app.Parameter, app.ExecuteIn);
         }
         /// <summary>
         /// Opens a folder
@@ -159,10 +170,16 @@ namespace AppzManagerV4.Global
         /// <returns>true if successful, otherwise false</returns>
         public static bool OpenExecute(FolderModel folder)
         {
-            if (folder == null)
-                return false;
-
-            return OpenExecute(folder.Path);
+            return folder != null && OpenExecute(folder.Path);
+        }
+        /// <summary>
+        /// Opens a file
+        /// </summary>
+        /// <param name="file">The file</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public static bool OpenExecute(FileModel file)
+        {
+            return file != null && OpenExecute(file.Path);
         }
         /// <summary>
         /// Gets the extension of a file
@@ -186,8 +203,8 @@ namespace AppzManagerV4.Global
             if (!File.Exists(lnkFile))
                 return "";
 
-            var shell = new IWshRuntimeLibrary.WshShell();
-            var link = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(lnkFile);
+            var shell = new WshShell();
+            var link = (IWshShortcut)shell.CreateShortcut(lnkFile);
 
             return File.Exists(link.TargetPath) ? link.TargetPath : "";
         }
@@ -296,6 +313,15 @@ namespace AppzManagerV4.Global
             return Color.Black;
         }
         /// <summary>
+        /// Converts a string into a color
+        /// </summary>
+        /// <param name="value">The string value (Format: "R,G,B")</param>
+        /// <returns>The color</returns>
+        public static Color StringToColor(string value)
+        {
+            return value.ToColor();
+        }
+        /// <summary>
         /// Converts a string into a int value
         /// </summary>
         /// <param name="value">The string value</param>
@@ -321,14 +347,47 @@ namespace AppzManagerV4.Global
         /// <param name="searchPattern">The search pattern</param>
         /// <param name="includeSubDirs">true if subdirectorys should be included (optional, default = false)</param>
         /// <returns>The list of files</returns>
-        public static List<FileModel> LoadFiles(string folder, string searchPattern, bool includeSubDirs = false)
+        public static List<FileInfoModel> LoadFiles(string folder, string searchPattern, bool includeSubDirs = false)
         {
             if (string.IsNullOrEmpty(folder))
                 return null;
 
             var files = new DirectoryInfo(folder).GetFiles(searchPattern);
 
-            return files.Select(s => new FileModel(s)).ToList();
+            return files.Select(s => new FileInfoModel(s)).ToList();
+        }
+        /// <summary>
+        /// Gets the icon according to the file extension
+        /// </summary>
+        /// <param name="filePath">The path of the file</param>
+        /// <returns>The icon</returns>
+        public static Bitmap GetFileIcon(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return Resources.File_Default;
+
+            var extension = GetFileExtension(filePath);
+
+            var audioList = new[] { "mp3", "ogg", "wav" };
+            var videoList = new[] { "avi", "mpeg", "mkv", "mp4" };
+            var imageList = new[] { "png", "jpg", "jpeg", "bmp", "tiff", "dds" };
+            var archivList = new[] { "zip", "rar", "tar.gz", "7z" };
+            var textList = new[] { "txt", "cs", "doc", "docx", "xls", "xlsx", "ods", "odt", "sql", "csv" };
+
+            if (audioList.Contains(extension))
+                return Resources.File_Audio;
+            if (videoList.Contains(extension))
+                return Resources.File_Video;
+            if (imageList.Contains(extension))
+                return Resources.File_Image;
+            if (archivList.Contains(extension))
+                return Resources.File_Archive;
+            if (textList.Contains(extension))
+                return Resources.File_Document;
+            if (extension.Equals("dll"))
+                return Resources.File_Dll;
+
+            return Resources.File_Default;
         }
     }
 }
