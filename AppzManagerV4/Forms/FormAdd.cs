@@ -179,6 +179,9 @@ namespace AppzManagerV4.Forms
                     ctrl.Text = infoMsg;
             }
 
+            if (!txtExecuteIn.Enabled)
+                txtExecuteIn.Text = infoMsg;
+
             LoadGroups();
         }
         /// <summary>
@@ -234,7 +237,7 @@ namespace AppzManagerV4.Forms
 
                 if (string.IsNullOrEmpty(_folder.IconPath))
                 {
-                    pictureBoxIcon.Image = Functions.ExtractIcon(_app.Path);
+                    pictureBoxIcon.Image = Properties.Resources.Folder;
                 }
                 else
                 {
@@ -247,7 +250,7 @@ namespace AppzManagerV4.Forms
                 var dirInfo = new DirectoryInfo(_path);
                 txtName.Text = dirInfo.Name;
                 txtPath.Text = dirInfo.FullName;
-                pictureBoxIcon.Image = Properties.Resources.Stuffed_Folder;
+                pictureBoxIcon.Image = Properties.Resources.Folder;
             }
         }
         /// <summary>
@@ -479,12 +482,18 @@ namespace AppzManagerV4.Forms
             switch (_region)
             {
                 case GlobalEnums.RegionType.App:
+                    Text = "Neuer Eintrag - Anwendung";
+                    pictureBoxIcon.Image = Properties.Resources.NoIcon;
                     SetValuesApp();
                     break;
                 case GlobalEnums.RegionType.Folder:
+                    Text = "Neuer Eintrag - Ordner";
+                    pictureBoxIcon.Image = Properties.Resources.Folder;
                     SetValuesFolder();
                     break;
                 case GlobalEnums.RegionType.File:
+                    Text = "Neuer Eintrag - Datei";
+                    pictureBoxIcon.Image = Properties.Resources.File_Default;
                     SetValuesFile();
                     break;
             }

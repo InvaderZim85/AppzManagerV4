@@ -343,7 +343,7 @@
             this.pictureBoxIcon.Name = "pictureBoxIcon";
             this.tableLayoutPanel.SetRowSpan(this.pictureBoxIcon, 4);
             this.pictureBoxIcon.Size = new System.Drawing.Size(134, 98);
-            this.pictureBoxIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxIcon.TabIndex = 17;
             this.pictureBoxIcon.TabStop = false;
             // 

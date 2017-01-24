@@ -172,7 +172,11 @@ namespace AppzManagerV4.Business
         private static ListViewItem CreateListViewItem(GlobalEnums.RegionType region, ListView listView, dynamic entry,
             bool error, ImageList imgList, int count)
         {
-            var item = new ListViewItem(entry.Name) {Tag = entry};
+            var name = entry.Name;
+            if (region == GlobalEnums.RegionType.App && entry.Autostart)
+                name += "*";
+                
+            var item = new ListViewItem(name) {Tag = entry};
             item.SubItems.Add(string.IsNullOrEmpty(entry.Shortcut) ? "" : $"STRG + {entry.Shortcut}");
             if (region == GlobalEnums.RegionType.App)
                 item.SubItems.Add(entry.Version);
