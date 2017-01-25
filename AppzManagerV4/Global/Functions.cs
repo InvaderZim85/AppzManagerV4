@@ -151,10 +151,9 @@ namespace AppzManagerV4.Global
         /// <returns>The contrast value</returns>
         public static Color GetContrastColor(Color color)
         {
-            var d = 0;
             var a = 1 - (0.299 * color.R + 0.587 * color.G + 0.114 * color.B) / 255;
 
-            d = a < 0.5 ? 0 : 255;
+            var d = a < 0.5 ? 0 : 255;
 
             return Color.FromArgb(d, d, d);
         }
@@ -177,7 +176,6 @@ namespace AppzManagerV4.Global
         {
             return folder != null && OpenExecute(folder.Path);
         }
-
         /// <summary>
         /// Opens a file
         /// </summary>
@@ -215,7 +213,6 @@ namespace AppzManagerV4.Global
 
             return File.Exists(link.TargetPath) ? link.TargetPath : "";
         }
-
         /// <summary>
         /// Calculates the pressed key and returns the according event
         /// </summary>
