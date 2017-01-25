@@ -111,7 +111,54 @@ namespace AppzManagerV4.Business
                 DataManager.DeleteFolder(entry);
             }
         }
+        /// <summary>
+        /// Creates the listview for the files
+        /// </summary>
+        /// <param name="listView">The list view</param>
+        /// <param name="fileList">The file list</param>
+        /// <param name="imageList">The image list</param>
+        public static void CreateListView(ref ListView listView, ref List<FileModel> fileList, ImageList imageList)
+        {
+            if (!fileList.Any())
+                return;
 
+            var deleteList = new List<FileModel>();
+            var count = imageList.Images.Count;
+
+            listView.Items.Clear();
+
+            foreach (var file in fileList)
+            {
+                var addEntry = true;
+                var error = false;
+
+                if (!File.Exists(file.Path))
+                {
+                    if (MessageBox.Show(
+                        $"Der Pfad der Datei {file.Name} (Pfad: {file.Path}) konnte nicht gefunden werden. Soll der Eintrag entfernt werden?",
+                        "Ordner", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        deleteList.Add(file);
+                        addEntry = false;
+                    }
+                    error = true;
+                    file.Error = true;
+                }
+
+                if (addEntry)
+                {
+                    listView.Items.Add(CreateListViewItem(GlobalEnums.RegionType.File, listView, file, error, imageList,
+                        count));
+                    count++;
+                }
+            }
+
+            foreach (var entry in deleteList)
+            {
+                fileList.Remove(entry);
+                DataManager.DeleteFile(entry);
+            }
+        }
         /// <summary>
         /// Creates a new list view entry
         /// </summary>
@@ -125,7 +172,11 @@ namespace AppzManagerV4.Business
         private static ListViewItem CreateListViewItem(GlobalEnums.RegionType region, ListView listView, dynamic entry,
             bool error, ImageList imgList, int count)
         {
-            var item = new ListViewItem(entry.Name) {Tag = entry};
+            var name = entry.Name;
+            if (region == GlobalEnums.RegionType.App && entry.Autostart)
+                name += "*";
+                
+            var item = new ListViewItem(name) {Tag = entry};
             item.SubItems.Add(string.IsNullOrEmpty(entry.Shortcut) ? "" : $"STRG + {entry.Shortcut}");
             if (region == GlobalEnums.RegionType.App)
                 item.SubItems.Add(entry.Version);
@@ -157,8 +208,12 @@ namespace AppzManagerV4.Business
                 else if (region == GlobalEnums.RegionType.Folder)
                 {
                     imgList.Images.Add(string.IsNullOrEmpty(entry.IconPath)
-                        ? Properties.Resources.Stuffed_Folder
+                        ? Properties.Resources.Folder
                         : Image.FromFile(entry.IconPath));
+                }
+                else if (region == GlobalEnums.RegionType.File)
+                {
+                    imgList.Images.Add(Functions.GetFileIcon(entry.Path));
                 }
                 item.ImageIndex = count;
                 entry.ImageIndex = count;
@@ -183,6 +238,7 @@ namespace AppzManagerV4.Business
 
             return item;
         }
+
         /// <summary>
         /// Creates the context menu for the notify icon
         /// </summary>
@@ -191,9 +247,10 @@ namespace AppzManagerV4.Business
         /// <param name="folderList">The folder list</param>
         /// <param name="groupList">The group list</param>
         /// <param name="imgList">The image list</param>
+        /// <param name="fileList">The file list</param>
         /// <param name="icon">The icon</param>
         public static void CreateNotifyIcon(ref ContextMenuStrip contextMenu, List<AppModel> appList,
-            List<FolderModel> folderList, List<GroupModel> groupList, ImageList imgList, Icon icon)
+            List<FolderModel> folderList, List<FileModel> fileList, List<GroupModel> groupList, ImageList imgList, Icon icon)
         {
             contextMenu.Items.Clear();
 
@@ -225,6 +282,15 @@ namespace AppzManagerV4.Business
                         contextMenu.Items.Add(new ToolStripSeparator());
 
                     contextMenu.Items.AddRange(CreateItems(GlobalEnums.RegionType.Folder, tmpFolderList, imgList));
+                }
+
+                var tmpFileList = fileList.Where(w => w.GroupId == group.Id && w.ShowInContextMenu && !w.Error).ToList();
+                if (tmpFileList.Any())
+                {
+                    if (contextMenu.Items.Count > 0)
+                        contextMenu.Items.Add(new ToolStripSeparator());
+
+                    contextMenu.Items.AddRange(CreateItems(GlobalEnums.RegionType.File, tmpFileList, imgList));
                 }
             }
 
@@ -269,7 +335,8 @@ namespace AppzManagerV4.Business
 
                 return result;
             }
-            else
+
+            if (region == GlobalEnums.RegionType.Folder)
             {
                 var tmpList = entryList as List<FolderModel>;
                 if (tmpList == null)
@@ -296,6 +363,36 @@ namespace AppzManagerV4.Business
 
                 return result;
             }
+
+            if (region == GlobalEnums.RegionType.File)
+            {
+                var tmpList = entryList as List<FileModel>;
+                if (tmpList != null)
+                    return null;
+
+                var result = new ToolStripItem[tmpList.Count];
+
+                var count = 0;
+
+                foreach (var entry in tmpList)
+                {
+                    var menuItem = new ToolStripMenuItem(entry.Name)
+                    {
+                        Tag = entry,
+                        Image = imgList.Images[entry.ImageIndex],
+                        ToolTipText =
+                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}",
+                        BackColor = entry.ColorCode.ToColor(),
+                        ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor())
+                    };
+
+                    result[count++] = menuItem;
+                }
+
+                return result;
+            }
+
+            return null;
         }
         /// <summary>
         /// Creates the "main" menu for the context menu
@@ -329,6 +426,14 @@ namespace AppzManagerV4.Business
                 Name = "NewFolderItem"
             };
 
+            var newFile = new ToolStripMenuItem("Datei")
+            {
+                Tag = null,
+                Image = Properties.Resources.Plus,
+                ToolTipText = "Neuer Eintrag - Datei",
+                Name = "NewFileItem"
+            };
+
             var closeItem = new ToolStripMenuItem("Beenden")
             {
                 Tag = null,
@@ -337,7 +442,7 @@ namespace AppzManagerV4.Business
                 Name = "CloseItem"
             };
 
-            newItem.DropDownItems.AddRange(new ToolStripItem[] { newApp, newFolder });
+            newItem.DropDownItems.AddRange(new ToolStripItem[] { newApp, newFolder, newFile });
 
             result[0] = new ToolStripSeparator();
             result[1] = newItem;

@@ -32,9 +32,14 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private List<FolderModel> _folderList;
         /// <summary>
+        /// Contains the file list
+        /// </summary>
+        private List<FileModel> _fileList;
+        /// <summary>
         /// Contains the groups
         /// </summary>
         private List<GroupModel> _groupList;
+
         /// <summary>
         /// Contains the new entry delegate
         /// </summary>
@@ -60,6 +65,7 @@ namespace AppzManagerV4.Forms
             {
                 listViewApps.View = View.LargeIcon;
                 listViewFolders.View = View.LargeIcon;
+                listViewFiles.View = View.LargeIcon;
                 viewMenuIcons.Checked = true;
                 viewMenuList.Checked = false;
             }
@@ -67,6 +73,7 @@ namespace AppzManagerV4.Forms
             {
                 listViewApps.View = View.Details;
                 listViewFolders.View = View.Details;
+                listViewFiles.View = View.Details;
                 viewMenuIcons.Checked = false;
                 viewMenuList.Checked = true;
             }
@@ -78,7 +85,9 @@ namespace AppzManagerV4.Forms
         {
             _appList = _dataManager.GetApps();
             _folderList = _dataManager.GetFolder();
+            _fileList = _dataManager.GetFiles();
             _groupList = _dataManager.GetGroups();
+
 
             ShowEntries();
         }
@@ -89,11 +98,13 @@ namespace AppzManagerV4.Forms
         {
             listViewApps.Items.Clear();
             listViewFolders.Items.Clear();
+            listViewFiles.Items.Clear();
 
             imageList.Images.Clear();
 
             listViewApps.Groups.Clear();
             listViewFolders.Groups.Clear();
+            listViewFiles.Groups.Clear();
         }
         /// <summary>
         /// Shows the entries
@@ -117,6 +128,8 @@ namespace AppzManagerV4.Forms
             FormManager.CreateListView(ref listViewApps, ref _appList, imageList);
             // Add the folder
             FormManager.CreateListView(ref listViewFolders, ref _folderList, imageList);
+            // Add the files
+            FormManager.CreateListView(ref listViewFiles, ref _fileList, imageList);
 
             CreateNotifyMenu();
 
@@ -131,7 +144,7 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void CreateNotifyMenu()
         {
-            FormManager.CreateNotifyIcon(ref contextMenuNotify, _appList, _folderList, _groupList, imageList, Icon);
+            FormManager.CreateNotifyIcon(ref contextMenuNotify, _appList, _folderList, _fileList, _groupList, imageList, Icon);
 
             foreach (var item in contextMenuNotify.Items.OfType<ToolStripMenuItem>())
             {
@@ -156,6 +169,7 @@ namespace AppzManagerV4.Forms
         {
             var listFolder = new List<string>();
             var listApp = new List<string>();
+            var listFiles = new List<string>();
 
             foreach (var file in fileList)
             {
@@ -163,7 +177,7 @@ namespace AppzManagerV4.Forms
                 {
                     listFolder.Add(file);
                 }
-                else
+                else if (Functions.IsApplication(file))
                 {
                     var filePath = "";
                     switch (Functions.GetFileExtension(file))
@@ -184,12 +198,19 @@ namespace AppzManagerV4.Forms
                     }
                     listApp.Add(filePath);
                 }
+                else
+                {
+                    listFiles.Add(file);
+                }
 
                 if (listApp.Any())
                     BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.App, listApp);
 
                 if (listFolder.Any())
                     BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.Folder, listFolder);
+
+                if (listFiles.Any())
+                    BeginInvoke(_newEntryDelegate, GlobalEnums.RegionType.File, listFiles);
             }
 
             LoadEntries();
@@ -209,6 +230,9 @@ namespace AppzManagerV4.Forms
                 case GlobalEnums.RegionType.Folder:
                     FormManager.CreateNewEntry(region, _folderList, filepathList);
                     break;
+                case GlobalEnums.RegionType.File:
+                    FormManager.CreateNewEntry(region, _fileList, filepathList);
+                    break;
             }
 
             LoadEntries();
@@ -221,14 +245,20 @@ namespace AppzManagerV4.Forms
         private void EditEntry(GlobalEnums.RegionType region, object entry)
         {
             var result = false;
-            if (region == GlobalEnums.RegionType.App)
+            switch (region)
             {
-                result = FormManager.EditEntry(region, _appList, entry);
+                case GlobalEnums.RegionType.App:
+                    result = FormManager.EditEntry(region, _appList, entry);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    result = FormManager.EditEntry(region, _folderList, entry);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    result = FormManager.EditEntry(region, _fileList, entry);
+                    break;
             }
-            else if (region == GlobalEnums.RegionType.Folder)
-            {
-                result = FormManager.EditEntry(region, _folderList, entry);
-            }
+
+
             if (result)
                 LoadEntries();
         }
@@ -244,14 +274,19 @@ namespace AppzManagerV4.Forms
                 return;
 
             var result = false;
-            if (region == GlobalEnums.RegionType.App)
+            switch (region)
             {
-                result = _dataManager.DeleteApp(id);
+                case GlobalEnums.RegionType.App:
+                    result = _dataManager.DeleteApp(id);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    result = _dataManager.DeleteFolder(id);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    result = _dataManager.DeleteFile(id);
+                    break;
             }
-            else if (region == GlobalEnums.RegionType.Folder)
-            {
-                result = _dataManager.DeleteFolder(id);
-            }
+
             if (result)
                 LoadEntries();
         }
@@ -268,13 +303,14 @@ namespace AppzManagerV4.Forms
             {
                 var app = menuItem.Tag as AppModel;
                 var folder = menuItem.Tag as FolderModel;
+                var file = menuItem.Tag as FileModel;
 
-                if (app == null && folder == null && menuItem.Name == "CloseItem")
+                if (menuItem.Name == "CloseItem")
                 {
                     Application.Exit();
                 }
 
-                if (app == null && folder == null)
+                if (app == null && folder == null && file == null)
                 {
                     switch (menuItem.Name)
                     {
@@ -297,9 +333,13 @@ namespace AppzManagerV4.Forms
                 {
                     Functions.OpenExecute(app);
                 }
-                else
+                else if (folder != null)
                 {
                     Functions.OpenExecute(folder);
+                }
+                else
+                {
+                    Functions.OpenExecute(file);
                 }
             }
         }
@@ -330,6 +370,8 @@ namespace AppzManagerV4.Forms
                 region = GlobalEnums.RegionType.App;
             else if (tabControl.SelectedTab == tabPageFolders)
                 region = GlobalEnums.RegionType.Folder;
+            else if (tabControl.SelectedTab == tabPageFiles)
+                region = GlobalEnums.RegionType.File;
 
             CreateNewEntry(region);
         }
@@ -379,6 +421,7 @@ namespace AppzManagerV4.Forms
         {
             AppModel app = null;
             FolderModel folder = null;
+            FileModel file = null;
 
             if (listViewApps.SelectedItems.Count > 0)
                 app = listViewApps.SelectedItems[0].Tag as AppModel;
@@ -386,12 +429,17 @@ namespace AppzManagerV4.Forms
             if (listViewFolders.SelectedItems.Count > 0)
                 folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
 
+            if (listViewFiles.SelectedItems.Count > 0)
+                file = listViewFiles.SelectedItems[0].Tag as FileModel;
+
             if (sender == contextMenuExecute)
             {
                 if (_selectedRegion == GlobalEnums.RegionType.App && app != null)
                     Functions.OpenExecute(app);
                 else if (_selectedRegion == GlobalEnums.RegionType.Folder && folder != null)
                     Functions.OpenExecute(folder);
+                else if (_selectedRegion == GlobalEnums.RegionType.File && file != null)
+                    Functions.OpenExecute(file);
             }
             else if (sender == contextMenuOpen)
             {
@@ -399,6 +447,8 @@ namespace AppzManagerV4.Forms
                     Functions.OpenExecute(app, false);
                 else if (_selectedRegion == GlobalEnums.RegionType.Folder && folder != null)
                     Functions.OpenExecute(folder);
+                else if (_selectedRegion == GlobalEnums.RegionType.File && file != null)
+                    Functions.OpenExecute(file);
             }
             else if (sender == contextMenuAddEntry)
             {
@@ -406,21 +456,21 @@ namespace AppzManagerV4.Forms
             }
             else if (sender == contextMenuEdit)
             {
-                if (_selectedRegion == GlobalEnums.RegionType.App && app != null)
-                    EditEntry(GlobalEnums.RegionType.App, app);
-                else if (_selectedRegion == GlobalEnums.RegionType.Folder && folder != null)
-                    EditEntry(GlobalEnums.RegionType.Folder, folder);
+                if (app != null)
+                    EditEntry(_selectedRegion, app);
+                else if (folder != null)
+                    EditEntry(_selectedRegion, folder);
+                else if (file != null)
+                    EditEntry(_selectedRegion, file);
             }
             else if (sender == contextMenuDelete)
             {
-                if (_selectedRegion == GlobalEnums.RegionType.App && app != null)
-                {
-                    DeleteEntry(GlobalEnums.RegionType.App, app.Id);
-                }
-                else if (_selectedRegion == GlobalEnums.RegionType.Folder && folder != null)
-                {
-                    DeleteEntry(GlobalEnums.RegionType.Folder, folder.Id);
-                }
+                if (app != null)
+                    DeleteEntry(_selectedRegion, app.Id);
+                else if (folder != null)
+                    DeleteEntry(_selectedRegion, folder.Id);
+                else if (file != null)
+                    DeleteEntry(_selectedRegion, file.Id);
             }
         }
         /// <summary>
@@ -440,7 +490,7 @@ namespace AppzManagerV4.Forms
                 contextMenuExecute.Enabled = !app.Error;
                 contextMenuOpen.Enabled = !app.Error;
             }
-            else if (tabControl.SelectedTab == tabPageFolders)
+            else if (tabControl.SelectedTab == tabPageFolders || tabControl.SelectedTab == tabPageFiles)
             {
                 if (listViewFolders.SelectedItems.Count <= 0)
                     return;
@@ -546,7 +596,7 @@ namespace AppzManagerV4.Forms
                         info += " - Autostart aktiviert";
                 }
             }
-            else
+            else if (_selectedRegion == GlobalEnums.RegionType.Folder)
             {
                 if (listViewFolders.SelectedItems.Count > 0)
                 {
@@ -559,6 +609,21 @@ namespace AppzManagerV4.Forms
                         info += $" - {folder.Comment}";
                     if (!string.IsNullOrEmpty(folder.Shortcut))
                         info += $" (Shortcut: {folder.Shortcut})";
+                }
+            }
+            else if (_selectedRegion == GlobalEnums.RegionType.File)
+            {
+                if (listViewFiles.SelectedItems.Count > 0)
+                {
+                    var file = listViewFiles.SelectedItems[0].Tag as FileModel;
+                    if (file == null)
+                        return;
+
+                    info = file.Name;
+                    if (!string.IsNullOrEmpty(file.Comment))
+                        info += $" - {file.Comment}";
+                    if (!string.IsNullOrEmpty(file.Shortcut))
+                        info += $" (Shortcut: {file.Shortcut})";
                 }
             }
             toolStripInfo.Text = info;
@@ -588,6 +653,7 @@ namespace AppzManagerV4.Forms
         {
             AppModel app = null;
             FolderModel folder = null;
+            FileModel file = null;
 
             if (listViewApps.SelectedItems.Count > 0)
                 app = listViewApps.SelectedItems[0].Tag as AppModel;
@@ -595,17 +661,31 @@ namespace AppzManagerV4.Forms
             if (listViewFolders.SelectedItems.Count > 0)
                 folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
 
+            if (listViewFiles.SelectedItems.Count > 0)
+                file = listViewFiles.SelectedItems[0].Tag as FileModel;
+
             var result = GlobalEnums.KeyDownEvent.None;
 
-            if (_selectedRegion == GlobalEnums.RegionType.App && app != null)
+            if (app != null)
                 result = Functions.MainKeyDown(e, _selectedRegion, app, _appList);
-            else if (_selectedRegion == GlobalEnums.RegionType.Folder && folder != null)
+            else if (folder != null)
                 result = Functions.MainKeyDown(e, _selectedRegion, folder, _folderList);
-            else if (app == null || folder == null)
+            else if (file != null)
+                result = Functions.MainKeyDown(e, _selectedRegion, file, _folderList);
+            else
             {
-                result = _selectedRegion == GlobalEnums.RegionType.App
-                    ? Functions.MainKeyDown(e, _selectedRegion, null, _appList)
-                    : Functions.MainKeyDown(e, _selectedRegion, null, _folderList);
+                switch (_selectedRegion)
+                {
+                    case GlobalEnums.RegionType.App:
+                        result = Functions.MainKeyDown(e, _selectedRegion, null, _appList);
+                        break;
+                    case GlobalEnums.RegionType.Folder:
+                        result = Functions.MainKeyDown(e, _selectedRegion, null, _folderList);
+                        break;
+                    case GlobalEnums.RegionType.File:
+                        result = Functions.MainKeyDown(e, _selectedRegion, null, _fileList);
+                        break;
+                }
             }
 
             if (result != GlobalEnums.KeyDownEvent.None)
@@ -616,19 +696,20 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void listView_DoubleClick(object sender, EventArgs e)
         {
-            if (_selectedRegion == GlobalEnums.RegionType.App)
+            switch (_selectedRegion)
             {
-                if (listViewApps.SelectedItems.Count > 0)
-                {
-                    Functions.OpenExecute(listViewApps.SelectedItems[0].Tag as AppModel);
-                }
-            }
-            else
-            {
-                if (listViewFolders.SelectedItems.Count > 0)
-                {
-                    Functions.OpenExecute(listViewFolders.SelectedItems[0].Tag as FolderModel);
-                }
+                case GlobalEnums.RegionType.App:
+                    if (listViewApps.SelectedItems.Count > 0)
+                        Functions.OpenExecute(listViewApps.SelectedItems[0].Tag as AppModel);
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    if (listViewFolders.SelectedItems.Count > 0)
+                        Functions.OpenExecute(listViewFolders.SelectedItems[0].Tag as FolderModel);
+                    break;
+                case GlobalEnums.RegionType.File:
+                    if (listViewFiles.SelectedItems.Count > 0)
+                        Functions.OpenExecute(listViewFiles.SelectedItems[0].Tag as FileModel);
+                    break;
             }
         }
         /// <summary>
@@ -636,29 +717,59 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (_selectedRegion == GlobalEnums.RegionType.App)
+            switch (_selectedRegion)
             {
-                if (listViewApps.SelectedItems.Count <= 0)
-                    return;
+                case GlobalEnums.RegionType.App:
+                    if (listViewApps.SelectedItems.Count <= 0)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
 
-                var app = listViewApps.SelectedItems[0].Tag as AppModel;
-                if (app == null)
-                    return;
+                    var app = listViewApps.SelectedItems[0].Tag as AppModel;
+                    if (app == null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
 
-                contextMenuExecute.Enabled = !app.Error;
-                contextMenuOpen.Enabled = !app.Error;
-            }
-            else if (_selectedRegion == GlobalEnums.RegionType.Folder)
-            {
-                if (listViewFolders.SelectedItems.Count <= 0)
-                    return;
+                    contextMenuExecute.Enabled = !app.Error;
+                    contextMenuOpen.Enabled = !app.Error;
+                    break;
+                case GlobalEnums.RegionType.Folder:
+                    if (listViewFolders.SelectedItems.Count <= 0)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
 
-                var folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
-                if (folder == null)
-                    return;
+                    var folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
+                    if (folder == null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
 
-                contextMenuExecute.Enabled = false;
-                contextMenuOpen.Enabled = !folder.Error;
+                    contextMenuExecute.Enabled = false;
+                    contextMenuOpen.Enabled = !folder.Error;
+                    break;
+                case GlobalEnums.RegionType.File:
+                    if (listViewFiles.SelectedItems.Count <= 0)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    var file = listViewFiles.SelectedItems[0].Tag as FileModel;
+                    if (file == null)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    contextMenuExecute.Enabled = false;
+                    contextMenuOpen.Enabled = !file.Error;
+                    break;
             }
         }
         /// <summary>
@@ -670,6 +781,8 @@ namespace AppzManagerV4.Forms
                 _selectedRegion = GlobalEnums.RegionType.App;
             else if (tabControl.SelectedTab == tabPageFolders)
                 _selectedRegion = GlobalEnums.RegionType.Folder;
+            else if (tabControl.SelectedTab == tabPageFiles)
+                _selectedRegion = GlobalEnums.RegionType.File;
         }
     }
 }

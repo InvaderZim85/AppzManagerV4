@@ -46,10 +46,10 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void Import()
         {
-            var files = new List<FileModel>();
+            var files = new List<FileInfoModel>();
             foreach (var checkedItem in checkedListFiles.CheckedItems)
             {
-                files.Add(checkedItem as FileModel);
+                files.Add(checkedItem as FileInfoModel);
             }
 
             var dataImport = new DataImport();

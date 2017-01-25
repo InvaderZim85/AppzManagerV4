@@ -1,29 +1,46 @@
-﻿using System.IO;
-
-namespace AppzManagerV4.DataObjects
+﻿namespace AppzManagerV4.DataObjects
 {
     public class FileModel
     {
         /// <summary>
-        /// Gets or sets the file info
+        /// Gets or sets the id
         /// </summary>
-        public FileInfo FileInfo { get; }
-
+        public int Id { get; set; }
         /// <summary>
-        /// Returns the name of the file
+        /// Gets or sets the name
         /// </summary>
-        /// <returns>The name of the file</returns>
-        public override string ToString()
-        {
-            return FileInfo?.Name ?? "";
-        }
+        public string Name { get; set; }
         /// <summary>
-        /// Creates a new instance of the class
+        /// Gets ors sets the path
         /// </summary>
-        /// <param name="fileInfo">The fileinfo</param>
-        public FileModel(FileInfo fileInfo)
-        {
-            FileInfo = fileInfo;
-        }
+        public string Path { get; set; }
+        /// <summary>
+        /// Gets or sets the comment
+        /// </summary>
+        public string Comment { get; set; }
+        /// <summary>
+        /// Gets or sets the shortcut
+        /// </summary>
+        public string Shortcut { get; set; }
+        /// <summary>
+        /// Gets or sets the group id
+        /// </summary>
+        public int GroupId { get; set; }
+        /// <summary>
+        /// Gets or sets the error indicator
+        /// </summary>
+        public bool Error { get; set; }
+        /// <summary>
+        /// Gets or sets the show in context menu value
+        /// </summary>
+        public bool ShowInContextMenu { get; set; }
+        /// <summary>
+        /// Gets or sets the image index
+        /// </summary>
+        public int ImageIndex { get; set; }
+        /// <summary>
+        /// Gets or sets the context color
+        /// </summary>
+        public string ColorCode { get; set; }
     }
 }

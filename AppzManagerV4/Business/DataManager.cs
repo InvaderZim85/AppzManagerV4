@@ -15,6 +15,10 @@ namespace AppzManagerV4.Business
         /// </summary>
         private readonly FolderRepo _repoFolder = new FolderRepo();
         /// <summary>
+        /// Contains the file repo
+        /// </summary>
+        private readonly FileRepo _repoFile = new FileRepo();
+        /// <summary>
         /// Contains the group repo
         /// </summary>
         private readonly GroupRepo _repoGroup = new GroupRepo();
@@ -97,7 +101,7 @@ namespace AppzManagerV4.Business
             if (folder.Id == 0)
                 return _repoFolder.AddFolder(folder);
             else
-                return _repoFolder.UpdateApp(folder);
+                return _repoFolder.UpdateFolder(folder);
         }
         /// <summary>
         /// Deletes a folder
@@ -116,6 +120,53 @@ namespace AppzManagerV4.Business
         public bool DeleteFolder(int id)
         {
             return _repoFolder.DeleteFolder(id);
+        }
+        #endregion
+
+        #region Files
+        /// <summary>
+        /// Gets all files
+        /// </summary>
+        /// <returns>List of files</returns>
+        public List<FileModel> GetFiles()
+        {
+            return _repoFile.GetFiles();
+        }
+        /// <summary>
+        /// Gets all files according to their group id
+        /// </summary>
+        /// <param name="groupId">The group id</param>
+        /// <returns>List of files</returns>
+        public List<FileModel> GetFiles(int groupId)
+        {
+            return _repoFile.GetFiles(groupId);
+        }
+        /// <summary>
+        /// Saves a file
+        /// </summary>
+        /// <param name="file">The file</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public bool SaveFile(FileModel file)
+        {
+            return file.Id == 0 ? _repoFile.AddFile(file) : _repoFile.UpdateFile(file);
+        }
+        /// <summary>
+        /// Deletes a file
+        /// </summary>
+        /// <param name="file">The file</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public bool DeleteFile(FileModel file)
+        {
+            return _repoFile.DeleteFile(file.Id);
+        }
+        /// <summary>
+        /// Deletes a file
+        /// </summary>
+        /// <param name="id">The id</param>
+        /// <returns>true if successful, otherwise false</returns>
+        public bool DeleteFile(int id)
+        {
+            return _repoFile.DeleteFile(id);
         }
         #endregion
 

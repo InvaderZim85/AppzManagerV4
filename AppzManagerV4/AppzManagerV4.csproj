@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Business\FormManager.cs" />
     <Compile Include="DataObjects\AppModel.cs" />
+    <Compile Include="DataObjects\FileInfoModel.cs" />
     <Compile Include="DataObjects\FileModel.cs" />
     <Compile Include="DataObjects\FolderModel.cs" />
     <Compile Include="DataObjects\GroupModel.cs" />
@@ -75,8 +76,15 @@
     <Compile Include="Data\AppRepo.cs" />
     <Compile Include="Data\DatabaseManager.cs" />
     <Compile Include="Business\DataManager.cs" />
+    <Compile Include="Data\FileRepo.cs" />
     <Compile Include="Data\FolderRepo.cs" />
     <Compile Include="Data\GroupRepo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <None Include="Data\Scripts\CreateTable_Files.txt" />
     <Compile Include="Data\Scripts\ScriptFiles.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -145,11 +153,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -158,11 +161,6 @@
     <None Include="Data\Scripts\CreateTable_App.txt" />
     <None Include="Data\Scripts\CreateTable_Folder.txt" />
     <None Include="Data\Scripts\CreateTable_Groups.txt" />
-    <None Include="Resources\Stuffed_Folder.png" />
-    <None Include="Resources\Plus.png" />
-    <None Include="Resources\NoIcon.png" />
-    <None Include="Resources\error.png" />
-    <None Include="Resources\Close.png" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
@@ -186,6 +184,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppzManager.ico" />
+    <None Include="Resources\Stuffed_Folder.png" />
+    <None Include="Resources\Plus.png" />
+    <None Include="Resources\NoIcon.png" />
+    <None Include="Resources\Groups.ico" />
+    <None Include="Resources\Generic_Application.png" />
+    <None Include="Resources\Folder.png" />
+    <None Include="Resources\File_Video.png" />
+    <None Include="Resources\File_Image.png" />
+    <None Include="Resources\File_Document.png" />
+    <None Include="Resources\File_Dll.png" />
+    <None Include="Resources\File_Default.png" />
+    <None Include="Resources\File_Audio.png" />
+    <None Include="Resources\File_Archive.png" />
+    <None Include="Resources\error.png" />
+    <None Include="Resources\Close.png" />
+    <None Include="Resources\Add.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" />

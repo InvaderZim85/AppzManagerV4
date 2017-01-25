@@ -76,12 +76,15 @@
             this.listViewApps = new System.Windows.Forms.ListView();
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnShortcut = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPageFiles = new System.Windows.Forms.TabPage();
+            this.listViewFiles = new System.Windows.Forms.ListView();
             this.contextMenu.SuspendLayout();
             this.tabPageFolders.SuspendLayout();
             this.menuStripMainForm.SuspendLayout();
             this.statusStripMainForm.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageApps.SuspendLayout();
+            this.tabPageFiles.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuNotify
@@ -363,6 +366,7 @@
             // 
             this.tabControl.Controls.Add(this.tabPageApps);
             this.tabControl.Controls.Add(this.tabPageFolders);
+            this.tabControl.Controls.Add(this.tabPageFiles);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 24);
             this.tabControl.Name = "tabControl";
@@ -417,6 +421,30 @@
             // 
             this.columnShortcut.Text = "Shortcut";
             // 
+            // tabPageFiles
+            // 
+            this.tabPageFiles.Controls.Add(this.listViewFiles);
+            this.tabPageFiles.Location = new System.Drawing.Point(4, 22);
+            this.tabPageFiles.Name = "tabPageFiles";
+            this.tabPageFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageFiles.Size = new System.Drawing.Size(602, 351);
+            this.tabPageFiles.TabIndex = 2;
+            this.tabPageFiles.Text = "Dateien";
+            this.tabPageFiles.UseVisualStyleBackColor = true;
+            // 
+            // listViewFiles
+            // 
+            this.listViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewFiles.Location = new System.Drawing.Point(3, 3);
+            this.listViewFiles.Name = "listViewFiles";
+            this.listViewFiles.Size = new System.Drawing.Size(596, 345);
+            this.listViewFiles.TabIndex = 0;
+            this.listViewFiles.UseCompatibleStateImageBehavior = false;
+            this.listViewFiles.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
+            this.listViewFiles.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
+            this.listViewFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
+            this.listViewFiles.Leave += new System.EventHandler(this.listView_Leave);
+            // 
             // FormMain
             // 
             this.AllowDrop = true;
@@ -442,6 +470,7 @@
             this.statusStripMainForm.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tabPageApps.ResumeLayout(false);
+            this.tabPageFiles.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -495,5 +524,7 @@
         private System.Windows.Forms.ColumnHeader columnShortcut;
         private System.Windows.Forms.ToolStripMenuItem programMenuData;
         private System.Windows.Forms.ToolStripMenuItem dataMenuImport;
+        private System.Windows.Forms.TabPage tabPageFiles;
+        private System.Windows.Forms.ListView listViewFiles;
     }
 }

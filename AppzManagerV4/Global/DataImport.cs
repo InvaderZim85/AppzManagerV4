@@ -36,7 +36,7 @@ namespace AppzManagerV4.Global
         /// </summary>
         /// <param name="fileList">The file list</param>
         /// <param name="onlyAddNew">true if only new entries should be add, false = duplicated entries will be overwritten (optional, default = true)</param>
-        public void ImportData(List<FileModel> fileList, bool onlyAddNew = true)
+        public void ImportData(List<FileInfoModel> fileList, bool onlyAddNew = true)
         {
             if (fileList == null)
                 return;

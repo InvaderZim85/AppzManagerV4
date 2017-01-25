@@ -343,7 +343,7 @@
             this.pictureBoxIcon.Name = "pictureBoxIcon";
             this.tableLayoutPanel.SetRowSpan(this.pictureBoxIcon, 4);
             this.pictureBoxIcon.Size = new System.Drawing.Size(134, 98);
-            this.pictureBoxIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBoxIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxIcon.TabIndex = 17;
             this.pictureBoxIcon.TabStop = false;
             // 
@@ -569,7 +569,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormAdd";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Eintrag";
+            this.Text = "Neuer Eintrag";
             this.Load += new System.EventHandler(this.FormAdd_Load);
             this.groupBoxData.ResumeLayout(false);
             this.tableLayoutPanel.ResumeLayout(false);

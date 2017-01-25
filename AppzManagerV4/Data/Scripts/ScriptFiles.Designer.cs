@@ -87,6 +87,28 @@ namespace AppzManagerV4.Data.Scripts {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE &quot;Files&quot; 
+        ///(
+        ///    &quot;Id&quot; INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
+        ///    &quot;Name&quot; NVARCHAR(100),
+        ///    &quot;Path&quot; NVARCHAR(1000),
+        ///    &quot;IconPath&quot; NVARCHAR(1000),
+        ///    &quot;Comment&quot; NVARCHAR(2000),
+        ///    &quot;Shortcut&quot; NVARCHAR(20),
+        ///    &quot;GroupId&quot; INT,
+        ///    &quot;Error&quot; BOOL DEFAULT (0) ,
+        ///    &quot;ShowInContextMenu&quot; BOOL DEFAULT (0) ,
+        ///    &quot;ImageIndex&quot; INT,
+        ///    &quot;ColorCode&quot; NVARCHAR(20)
+        ///).
+        /// </summary>
+        internal static string CreateTable_Files {
+            get {
+                return ResourceManager.GetString("CreateTable_Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE &quot;Folders&quot; 
         ///(
         ///    &quot;Id&quot; INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
