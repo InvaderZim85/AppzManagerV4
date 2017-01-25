@@ -330,10 +330,12 @@ namespace AppzManagerV4.Business
                         Tag = entry,
                         Image = imgList.Images[entry.ImageIndex],
                         ToolTipText =
-                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}",
-                        BackColor = entry.ColorCode.ToColor(),
-                        ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor())
+                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}"
                     };
+
+                    if (entry.ColorCode != "255,255,255")
+                        menuItem.BackColor = entry.ColorCode.ToColor();
+                        menuItem.ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor());
 
 
                     result[count++] = menuItem;
@@ -359,10 +361,12 @@ namespace AppzManagerV4.Business
                         Tag = entry,
                         Image = imgList.Images[entry.ImageIndex],
                         ToolTipText =
-                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}",
-                        BackColor = entry.ColorCode.ToColor(),
-                        ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor())
+                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}"
                     };
+
+                    if (entry.ColorCode != "255,255,255")
+                        menuItem.BackColor = entry.ColorCode.ToColor();
+                    menuItem.ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor());
 
                     result[count++] = menuItem;
                 }
@@ -387,10 +391,12 @@ namespace AppzManagerV4.Business
                         Tag = entry,
                         Image = imgList.Images[entry.ImageIndex],
                         ToolTipText =
-                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}",
-                        BackColor = entry.ColorCode.ToColor(),
-                        ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor())
+                            string.IsNullOrEmpty(entry.Comment) ? entry.Name : $"{entry.Name} - {entry.Comment}"
                     };
+
+                    if (entry.ColorCode != "255,255,255")
+                        menuItem.BackColor = entry.ColorCode.ToColor();
+                    menuItem.ForeColor = Functions.GetContrastColor(entry.ColorCode.ToColor());
 
                     result[count++] = menuItem;
                 }
