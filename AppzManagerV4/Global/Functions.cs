@@ -107,27 +107,32 @@ namespace AppzManagerV4.Global
 
                 var startInfo = new ProcessStartInfo();
 
-                var folder = IsFolder(path);
-                if (folder)
+                if (IsFolder(path))
                 {
-                    // Opens a folder
                     startInfo.FileName = "explorer.exe";
                     startInfo.Arguments = path;
                 }
-                else if (!execute)
+                else if (IsApplication(path))
                 {
-                    // Selects the given path
-                    startInfo.FileName = "explorer.exe";
-                    startInfo.Arguments = $"/select,{path}";
+                    if (execute)
+                    {
+                        startInfo.FileName = path;
+                        if (!string.IsNullOrEmpty(arguments))
+                            startInfo.Arguments = arguments;
+
+                        if (!string.IsNullOrEmpty(executeIn))
+                            startInfo.WorkingDirectory = executeIn;
+                    }
+                    else
+                    {
+                        // Selects the given path
+                        startInfo.FileName = "explorer.exe";
+                        startInfo.Arguments = $"/select,{path}";
+                    }
                 }
                 else
                 {
                     startInfo.FileName = path;
-                    if (!string.IsNullOrEmpty(arguments))
-                        startInfo.Arguments = arguments;
-
-                    if (!string.IsNullOrEmpty(executeIn))
-                        startInfo.WorkingDirectory = executeIn;
                 }
 
                 Process.Start(startInfo);
@@ -172,14 +177,16 @@ namespace AppzManagerV4.Global
         {
             return folder != null && OpenExecute(folder.Path);
         }
+
         /// <summary>
         /// Opens a file
         /// </summary>
         /// <param name="file">The file</param>
+        /// <param name="execute">True if the file should be executed, otherwise false (optional, default = false)</param>
         /// <returns>true if successful, otherwise false</returns>
-        public static bool OpenExecute(FileModel file)
+        public static bool OpenExecute(FileModel file, bool execute = false)
         {
-            return file != null && OpenExecute(file.Path);
+            return file != null && OpenExecute(file.Path, execute);
         }
         /// <summary>
         /// Gets the extension of a file

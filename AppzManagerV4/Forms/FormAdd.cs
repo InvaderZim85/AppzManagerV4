@@ -268,7 +268,6 @@ namespace AppzManagerV4.Forms
             {
                 var fileInfo = new FileInfo(_path);
                 txtName.Text = fileInfo.Name;
-                txtExecuteIn.Text = fileInfo.DirectoryName;
                 txtPath.Text = _path;
                 pictureBoxIcon.Image = Functions.GetFileIcon(_path);
             }

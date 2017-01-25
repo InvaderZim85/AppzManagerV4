@@ -324,6 +324,9 @@ namespace AppzManagerV4.Forms
                         case "NewFolderItem":
                             CreateNewEntry(GlobalEnums.RegionType.Folder);
                             break;
+                        case "NewFileItem":
+                            CreateNewEntry(GlobalEnums.RegionType.File);
+                            break;
                         case "HeaderItem":
                             WindowState = FormWindowState.Normal;
                             BringToFront();
@@ -478,36 +481,6 @@ namespace AppzManagerV4.Forms
                     DeleteEntry(_selectedRegion, folder.Id);
                 else if (file != null)
                     DeleteEntry(_selectedRegion, file.Id);
-            }
-        }
-        /// <summary>
-        /// Occurs when the context menu is opening
-        /// </summary>
-        private void contextMenuNotify_Opening(object sender, CancelEventArgs e)
-        {
-            if (tabControl.SelectedTab == tabPageApps)
-            {
-                if (listViewApps.SelectedItems.Count <= 0)
-                    return;
-
-                var app = listViewApps.SelectedItems[0].Tag as AppModel;
-                if (app == null)
-                    return;
-
-                contextMenuExecute.Enabled = !app.Error;
-                contextMenuOpen.Enabled = !app.Error;
-            }
-            else if (tabControl.SelectedTab == tabPageFolders || tabControl.SelectedTab == tabPageFiles)
-            {
-                if (listViewFolders.SelectedItems.Count <= 0)
-                    return;
-
-                var folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
-                if (folder == null)
-                    return;
-
-                contextMenuExecute.Enabled = false;
-                contextMenuOpen.Enabled = !folder.Error;
             }
         }
         /// <summary>
@@ -724,58 +697,49 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
+            contextMenuExecute.Enabled = false;
+            contextMenuOpen.Enabled = false;
+            contextMenuDelete.Enabled = false;
+            contextMenuEdit.Enabled = false;
             switch (_selectedRegion)
             {
                 case GlobalEnums.RegionType.App:
                     if (listViewApps.SelectedItems.Count <= 0)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
                     var app = listViewApps.SelectedItems[0].Tag as AppModel;
                     if (app == null)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
                     contextMenuExecute.Enabled = !app.Error;
                     contextMenuOpen.Enabled = !app.Error;
+                    contextMenuDelete.Enabled = true;
+                    contextMenuEdit.Enabled = true;
                     break;
                 case GlobalEnums.RegionType.Folder:
                     if (listViewFolders.SelectedItems.Count <= 0)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
                     var folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
                     if (folder == null)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
-                    contextMenuExecute.Enabled = false;
                     contextMenuOpen.Enabled = !folder.Error;
+                    contextMenuDelete.Enabled = true;
+                    contextMenuEdit.Enabled = true;
                     break;
                 case GlobalEnums.RegionType.File:
                     if (listViewFiles.SelectedItems.Count <= 0)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
                     var file = listViewFiles.SelectedItems[0].Tag as FileModel;
                     if (file == null)
-                    {
-                        e.Cancel = true;
                         return;
-                    }
 
-                    contextMenuExecute.Enabled = false;
+                    contextMenuExecute.Enabled = !file.Error;
                     contextMenuOpen.Enabled = !file.Error;
+                    contextMenuDelete.Enabled = true;
+                    contextMenuEdit.Enabled = true;
                     break;
             }
         }

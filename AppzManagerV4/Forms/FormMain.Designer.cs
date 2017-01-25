@@ -95,8 +95,7 @@
             // contextMenuNotify
             // 
             this.contextMenuNotify.Name = "contextMenuNotify";
-            this.contextMenuNotify.Size = new System.Drawing.Size(61, 4);
-            this.contextMenuNotify.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuNotify_Opening);
+            this.contextMenuNotify.Size = new System.Drawing.Size(153, 26);
             // 
             // columnPath
             // 
@@ -135,7 +134,7 @@
             // 
             this.contextMenuExecute.Name = "contextMenuExecute";
             this.contextMenuExecute.Size = new System.Drawing.Size(172, 22);
-            this.contextMenuExecute.Text = "Ausführen";
+            this.contextMenuExecute.Text = "Öffnen";
             this.contextMenuExecute.Click += new System.EventHandler(this.ContextMenuClick);
             // 
             // contextMenuOpen

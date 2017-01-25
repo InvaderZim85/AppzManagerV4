@@ -570,7 +570,7 @@
             this.Controls.Add(this.panelBottom);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormAdd";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Neuer Eintrag";
             this.Load += new System.EventHandler(this.FormAdd_Load);
             this.groupBoxData.ResumeLayout(false);
