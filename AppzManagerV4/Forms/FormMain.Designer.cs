@@ -434,7 +434,11 @@
             // 
             // listViewFiles
             // 
+            this.listViewFiles.ContextMenuStrip = this.contextMenu;
             this.listViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewFiles.FullRowSelect = true;
+            this.listViewFiles.GridLines = true;
+            this.listViewFiles.LargeImageList = this.imageList;
             this.listViewFiles.Location = new System.Drawing.Point(3, 3);
             this.listViewFiles.Name = "listViewFiles";
             this.listViewFiles.Size = new System.Drawing.Size(596, 345);
@@ -456,8 +460,9 @@
             this.Controls.Add(this.statusStripMainForm);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AppzManager V.4";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FormMain_DragDrop);

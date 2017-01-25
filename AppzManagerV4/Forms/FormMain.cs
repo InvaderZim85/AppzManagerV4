@@ -350,6 +350,12 @@ namespace AppzManagerV4.Forms
         {
             LoadEntries();
             clockTimer.Start();
+
+            // Set the window size
+            if (Properties.Settings.Default.Width != 0)
+            {
+                Size = new Size(Properties.Settings.Default.Width, Properties.Settings.Default.Height);
+            }
         }
         /// <summary>
         /// Occurs when the user hits the group menu item
@@ -783,6 +789,15 @@ namespace AppzManagerV4.Forms
                 _selectedRegion = GlobalEnums.RegionType.Folder;
             else if (tabControl.SelectedTab == tabPageFiles)
                 _selectedRegion = GlobalEnums.RegionType.File;
+        }
+        /// <summary>
+        /// Occurs when the form is closing
+        /// </summary>
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Width = Size.Width;
+            Properties.Settings.Default.Height = Size.Height;
+            Properties.Settings.Default.Save();
         }
     }
 }

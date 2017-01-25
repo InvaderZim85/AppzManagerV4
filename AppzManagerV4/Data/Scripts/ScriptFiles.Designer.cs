@@ -92,12 +92,11 @@ namespace AppzManagerV4.Data.Scripts {
         ///    &quot;Id&quot; INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,
         ///    &quot;Name&quot; NVARCHAR(100),
         ///    &quot;Path&quot; NVARCHAR(1000),
-        ///    &quot;IconPath&quot; NVARCHAR(1000),
         ///    &quot;Comment&quot; NVARCHAR(2000),
         ///    &quot;Shortcut&quot; NVARCHAR(20),
         ///    &quot;GroupId&quot; INT,
-        ///    &quot;Error&quot; BOOL DEFAULT (0) ,
-        ///    &quot;ShowInContextMenu&quot; BOOL DEFAULT (0) ,
+        ///    &quot;Error&quot; BOOL DEFAULT (0),
+        ///    &quot;ShowInContextMenu&quot; BOOL DEFAULT (0),
         ///    &quot;ImageIndex&quot; INT,
         ///    &quot;ColorCode&quot; NVARCHAR(20)
         ///).

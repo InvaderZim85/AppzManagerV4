@@ -271,7 +271,9 @@ namespace AppzManagerV4.Business
                     if (contextMenu.Items.Count > 0)
                         contextMenu.Items.Add(new ToolStripSeparator());
 
-                    contextMenu.Items.AddRange(CreateItems(GlobalEnums.RegionType.App, tmpAppList, imgList));
+                    var items = CreateItems(GlobalEnums.RegionType.App, tmpAppList, imgList);
+                    if (items != null)
+                        contextMenu.Items.AddRange(items);
                 }
 
                 var tmpFolderList =
@@ -281,7 +283,9 @@ namespace AppzManagerV4.Business
                     if (contextMenu.Items.Count > 0)
                         contextMenu.Items.Add(new ToolStripSeparator());
 
-                    contextMenu.Items.AddRange(CreateItems(GlobalEnums.RegionType.Folder, tmpFolderList, imgList));
+                    var items = CreateItems(GlobalEnums.RegionType.Folder, tmpFolderList, imgList);
+                    if (items != null)
+                        contextMenu.Items.AddRange(items);
                 }
 
                 var tmpFileList = fileList.Where(w => w.GroupId == group.Id && w.ShowInContextMenu && !w.Error).ToList();
@@ -290,7 +294,9 @@ namespace AppzManagerV4.Business
                     if (contextMenu.Items.Count > 0)
                         contextMenu.Items.Add(new ToolStripSeparator());
 
-                    contextMenu.Items.AddRange(CreateItems(GlobalEnums.RegionType.File, tmpFileList, imgList));
+                    var items = CreateItems(GlobalEnums.RegionType.File, tmpFileList, imgList);
+                    if (items != null)
+                        contextMenu.Items.AddRange(items);
                 }
             }
 
@@ -367,7 +373,7 @@ namespace AppzManagerV4.Business
             if (region == GlobalEnums.RegionType.File)
             {
                 var tmpList = entryList as List<FileModel>;
-                if (tmpList != null)
+                if (tmpList == null)
                     return null;
 
                 var result = new ToolStripItem[tmpList.Count];

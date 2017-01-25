@@ -243,6 +243,7 @@
             this.txtExecuteIn.Name = "txtExecuteIn";
             this.txtExecuteIn.Size = new System.Drawing.Size(307, 20);
             this.txtExecuteIn.TabIndex = 0;
+            this.txtExecuteIn.EnabledChanged += new System.EventHandler(this.txtExecuteIn_EnabledChanged);
             // 
             // btnBrowseExecuteIn
             // 
@@ -332,7 +333,7 @@
             this.lblPath.Name = "lblPath";
             this.lblPath.Size = new System.Drawing.Size(134, 26);
             this.lblPath.TabIndex = 1;
-            this.lblPath.Text = "Programmpfad:";
+            this.lblPath.Text = "Pfad:";
             this.lblPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // pictureBoxIcon
@@ -436,6 +437,7 @@
             // 
             // lblColorData
             // 
+            this.lblColorData.BackColor = System.Drawing.Color.White;
             this.lblColorData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblColorData.Location = new System.Drawing.Point(143, 208);
             this.lblColorData.Name = "lblColorData";

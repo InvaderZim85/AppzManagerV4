@@ -81,7 +81,7 @@ namespace AppzManagerV4.Data
                                  "Error = @error, " +
                                  "ShowInContextMenu = @showInContextMenu, " +
                                  "ImageIndex = @imageIndex, " +
-                                 "ColorCode = @colorCode, " +
+                                 "ColorCode = @colorCode " +
                                  "WHERE Id = @id";
 
             return _dbManager.Connection.Execute(query, new

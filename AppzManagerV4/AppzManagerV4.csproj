@@ -62,7 +62,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TAFactory.IconPack">
-      <HintPath>N:\AppzManagerV4\ThirdParty\TAFactory.IconPack.dll</HintPath>
+      <HintPath>..\ThirdParty\TAFactory.IconPack.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -267,7 +267,7 @@ namespace AppzManagerV4.Forms
             else if (!string.IsNullOrEmpty(_path))
             {
                 var fileInfo = new FileInfo(_path);
-                txtName.Text = fileInfo.Name.Replace(fileInfo.Extension, "");
+                txtName.Text = fileInfo.Name;
                 txtExecuteIn.Text = fileInfo.DirectoryName;
                 txtPath.Text = _path;
                 pictureBoxIcon.Image = Functions.GetFileIcon(_path);
@@ -522,34 +522,54 @@ namespace AppzManagerV4.Forms
                     }
                     break;
                 case "btnBrowsePath":
-                    if (_region == GlobalEnums.RegionType.App)
+                    switch (_region)
                     {
-                        var diagFolder = new OpenFileDialog
+                        case GlobalEnums.RegionType.App:
                         {
-                            Title = "Wählen Sie das gewünschte Programm aus.",
-                            Filter = "Ausführbare Dateien (*.exe)|*.exe",
-                            Multiselect = false
-                        };
+                            var diagFolder = new OpenFileDialog
+                            {
+                                Title = "Wählen Sie das gewünschte Programm aus.",
+                                Filter = "Ausführbare Dateien (*.exe)|*.exe",
+                                Multiselect = false
+                            };
 
-                        if (diagFolder.ShowDialog() != DialogResult.OK)
-                            return;
-                        _path = diagFolder.FileName;
-                        SetValuesApp();
-                    }
-                    else
-                    {
-                        var diagFolder = new FolderBrowserDialog
-                        {
-                            Description = "Wählen Sie den gewünschten Ordner aus.",
-                            ShowNewFolderButton = false
-                        };
-
-                        if (diagFolder.ShowDialog() == DialogResult.OK)
-                        {
-                            txtPath.Text = diagFolder.SelectedPath;
-                            _path = diagFolder.SelectedPath;
-                            SetValuesFolder();
+                            if (diagFolder.ShowDialog() != DialogResult.OK)
+                                return;
+                            _path = diagFolder.FileName;
+                            SetValuesApp();
                         }
+                            break;
+                        case GlobalEnums.RegionType.Folder:
+                        {
+                            var diagFolder = new FolderBrowserDialog
+                            {
+                                Description = "Wählen Sie den gewünschten Ordner aus.",
+                                ShowNewFolderButton = false
+                            };
+
+                            if (diagFolder.ShowDialog() == DialogResult.OK)
+                            {
+                                txtPath.Text = diagFolder.SelectedPath;
+                                _path = diagFolder.SelectedPath;
+                                SetValuesFolder();
+                            }
+                        }
+                            break;
+                        case GlobalEnums.RegionType.File:
+                        {
+                            var diagFolder = new OpenFileDialog
+                            {
+                                Title = "Wählen Sie die gewünschte Datei aus.",
+                                Filter = "Datei (*.*)|*.*",
+                                Multiselect = false
+                            };
+
+                            if (diagFolder.ShowDialog() != DialogResult.OK)
+                                return;
+                            _path = diagFolder.FileName;
+                            SetValuesFile();
+                        }
+                            break;
                     }
                     break;
                 case "btnChangeIcon":
@@ -652,6 +672,13 @@ namespace AppzManagerV4.Forms
             pictureBoxIcon.Image = string.IsNullOrEmpty(txtPath.Text)
                 ? Properties.Resources.NoIcon
                 : Functions.ExtractIcon(txtPath.Text);
+        }
+        /// <summary>
+        /// Occurs when the enabled state of the text box was changed
+        /// </summary>
+        private void txtExecuteIn_EnabledChanged(object sender, EventArgs e)
+        {
+            btnBrowseExecuteIn.Enabled = txtExecuteIn.Enabled;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using AppzManagerV4.Data.Scripts;
@@ -11,7 +12,7 @@ namespace AppzManagerV4.Data
         /// <summary>
         /// Contains the path of the database file
         /// </summary>
-        private string _dbFile = Path.Combine(Properties.Settings.Default.BaseFolder, "AppzManager.sqlite");
+        private readonly string _dbFile = Path.Combine(Properties.Settings.Default.BaseFolder, "AppzManager.sqlite");
         /// <summary>
         /// Contains the sql lite connection
         /// </summary>
@@ -54,12 +55,21 @@ namespace AppzManagerV4.Data
         /// </summary>
         private void CreateDatabase()
         {
-            // App table
-            _connection.Execute(ScriptManager.CreateTableApp);
-            // folder table
-            _connection.Execute(ScriptManager.CreateTableFolder);
-            // Group table
-            _connection.Execute(ScriptManager.CreateTableGroup);
+            try
+            {
+                // App table
+                _connection.Execute(ScriptManager.CreateTableApp);
+                // folder table
+                _connection.Execute(ScriptManager.CreateTableFolder);
+                // Group table
+                _connection.Execute(ScriptManager.CreateTableGroup);
+                // File table
+                _connection.Execute(ScriptManager.CreateTableFiles);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
     }
 }
