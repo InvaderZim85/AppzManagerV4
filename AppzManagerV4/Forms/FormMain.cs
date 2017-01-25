@@ -122,6 +122,7 @@ namespace AppzManagerV4.Forms
                 var groupEntry = new ListViewGroup(entry.Name) {Tag = entry};
                 listViewApps.Groups.Add(groupEntry);
                 listViewFolders.Groups.Add(groupEntry);
+                listViewFiles.Groups.Add(groupEntry);
             });
 
             // Add the apps

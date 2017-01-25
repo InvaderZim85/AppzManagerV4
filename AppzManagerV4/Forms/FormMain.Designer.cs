@@ -78,6 +78,11 @@
             this.columnShortcut = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPageFiles = new System.Windows.Forms.TabPage();
             this.listViewFiles = new System.Windows.Forms.ListView();
+            this.columnFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFileShortcut = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFileComment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFileShowIn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenu.SuspendLayout();
             this.tabPageFolders.SuspendLayout();
             this.menuStripMainForm.SuspendLayout();
@@ -434,6 +439,12 @@
             // 
             // listViewFiles
             // 
+            this.listViewFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnFileName,
+            this.columnFileShortcut,
+            this.columnFileComment,
+            this.columnFilePath,
+            this.columnFileShowIn});
             this.listViewFiles.ContextMenuStrip = this.contextMenu;
             this.listViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewFiles.FullRowSelect = true;
@@ -448,6 +459,26 @@
             this.listViewFiles.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
             this.listViewFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
             this.listViewFiles.Leave += new System.EventHandler(this.listView_Leave);
+            // 
+            // columnFileName
+            // 
+            this.columnFileName.Text = "";
+            // 
+            // columnFileShortcut
+            // 
+            this.columnFileShortcut.Text = "";
+            // 
+            // columnFileComment
+            // 
+            this.columnFileComment.Text = "";
+            // 
+            // columnFilePath
+            // 
+            this.columnFilePath.Text = "";
+            // 
+            // columnFileShowIn
+            // 
+            this.columnFileShowIn.Text = "Im Kontextmenü anzeigen";
             // 
             // FormMain
             // 
@@ -531,5 +562,10 @@
         private System.Windows.Forms.ToolStripMenuItem dataMenuImport;
         private System.Windows.Forms.TabPage tabPageFiles;
         private System.Windows.Forms.ListView listViewFiles;
+        private System.Windows.Forms.ColumnHeader columnFileName;
+        private System.Windows.Forms.ColumnHeader columnFileShortcut;
+        private System.Windows.Forms.ColumnHeader columnFileComment;
+        private System.Windows.Forms.ColumnHeader columnFilePath;
+        private System.Windows.Forms.ColumnHeader columnFileShowIn;
     }
 }
