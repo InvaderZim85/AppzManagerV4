@@ -356,9 +356,14 @@ namespace AppzManagerV4.Forms
             clockTimer.Start();
 
             // Set the window size
-            if (Properties.Settings.Default.Width != 0)
+            // 763; 547
+            if (Properties.Settings.Default.Width >= 750 && Properties.Settings.Default.Height >= 550)
             {
                 Size = new Size(Properties.Settings.Default.Width, Properties.Settings.Default.Height);
+            }
+            else
+            {
+                Size = new Size(750, 550);
             }
         }
         /// <summary>

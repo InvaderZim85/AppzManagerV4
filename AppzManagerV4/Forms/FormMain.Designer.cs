@@ -95,7 +95,7 @@
             // contextMenuNotify
             // 
             this.contextMenuNotify.Name = "contextMenuNotify";
-            this.contextMenuNotify.Size = new System.Drawing.Size(153, 26);
+            this.contextMenuNotify.Size = new System.Drawing.Size(61, 4);
             // 
             // columnPath
             // 
@@ -264,7 +264,7 @@
             this.mainMenuReload});
             this.menuStripMainForm.Location = new System.Drawing.Point(0, 0);
             this.menuStripMainForm.Name = "menuStripMainForm";
-            this.menuStripMainForm.Size = new System.Drawing.Size(610, 24);
+            this.menuStripMainForm.Size = new System.Drawing.Size(747, 24);
             this.menuStripMainForm.TabIndex = 3;
             this.menuStripMainForm.Text = "menuStripMainForm";
             // 
@@ -348,9 +348,9 @@
             this.statusStripMainForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDate,
             this.toolStripInfo});
-            this.statusStripMainForm.Location = new System.Drawing.Point(0, 401);
+            this.statusStripMainForm.Location = new System.Drawing.Point(0, 485);
             this.statusStripMainForm.Name = "statusStripMainForm";
-            this.statusStripMainForm.Size = new System.Drawing.Size(610, 24);
+            this.statusStripMainForm.Size = new System.Drawing.Size(747, 24);
             this.statusStripMainForm.TabIndex = 4;
             this.statusStripMainForm.Text = "statusStripMainForm";
             // 
@@ -375,7 +375,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 24);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(610, 377);
+            this.tabControl.Size = new System.Drawing.Size(747, 461);
             this.tabControl.TabIndex = 5;
             this.tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl_Selected);
             // 
@@ -385,7 +385,7 @@
             this.tabPageApps.Location = new System.Drawing.Point(4, 22);
             this.tabPageApps.Name = "tabPageApps";
             this.tabPageApps.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageApps.Size = new System.Drawing.Size(602, 351);
+            this.tabPageApps.Size = new System.Drawing.Size(739, 435);
             this.tabPageApps.TabIndex = 0;
             this.tabPageApps.Text = "Anwendungen";
             this.tabPageApps.UseVisualStyleBackColor = true;
@@ -409,7 +409,7 @@
             this.listViewApps.LargeImageList = this.imageList;
             this.listViewApps.Location = new System.Drawing.Point(3, 3);
             this.listViewApps.Name = "listViewApps";
-            this.listViewApps.Size = new System.Drawing.Size(596, 345);
+            this.listViewApps.Size = new System.Drawing.Size(733, 429);
             this.listViewApps.TabIndex = 0;
             this.listViewApps.UseCompatibleStateImageBehavior = false;
             this.listViewApps.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -484,7 +484,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 425);
+            this.ClientSize = new System.Drawing.Size(747, 509);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStripMainForm);
             this.Controls.Add(this.statusStripMainForm);
