@@ -83,6 +83,8 @@
             this.columnFileComment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFileShowIn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.mainMenuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsMenuMd5Hash = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.tabPageFolders.SuspendLayout();
             this.menuStripMainForm.SuspendLayout();
@@ -183,7 +185,7 @@
             this.tabPageFolders.Location = new System.Drawing.Point(4, 22);
             this.tabPageFolders.Name = "tabPageFolders";
             this.tabPageFolders.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFolders.Size = new System.Drawing.Size(602, 351);
+            this.tabPageFolders.Size = new System.Drawing.Size(739, 435);
             this.tabPageFolders.TabIndex = 1;
             this.tabPageFolders.Text = "Ordner";
             this.tabPageFolders.UseVisualStyleBackColor = true;
@@ -203,7 +205,7 @@
             this.listViewFolders.LargeImageList = this.imageList;
             this.listViewFolders.Location = new System.Drawing.Point(3, 3);
             this.listViewFolders.Name = "listViewFolders";
-            this.listViewFolders.Size = new System.Drawing.Size(596, 345);
+            this.listViewFolders.Size = new System.Drawing.Size(733, 429);
             this.listViewFolders.TabIndex = 0;
             this.listViewFolders.UseCompatibleStateImageBehavior = false;
             this.listViewFolders.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -261,7 +263,8 @@
             this.mainMenuView,
             this.mainMenuNewEntry,
             this.mainMenuGroups,
-            this.mainMenuReload});
+            this.mainMenuReload,
+            this.mainMenuTools});
             this.menuStripMainForm.Location = new System.Drawing.Point(0, 0);
             this.menuStripMainForm.Name = "menuStripMainForm";
             this.menuStripMainForm.Size = new System.Drawing.Size(747, 24);
@@ -431,7 +434,7 @@
             this.tabPageFiles.Location = new System.Drawing.Point(4, 22);
             this.tabPageFiles.Name = "tabPageFiles";
             this.tabPageFiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFiles.Size = new System.Drawing.Size(602, 351);
+            this.tabPageFiles.Size = new System.Drawing.Size(739, 435);
             this.tabPageFiles.TabIndex = 2;
             this.tabPageFiles.Text = "Dateien";
             this.tabPageFiles.UseVisualStyleBackColor = true;
@@ -451,7 +454,7 @@
             this.listViewFiles.LargeImageList = this.imageList;
             this.listViewFiles.Location = new System.Drawing.Point(3, 3);
             this.listViewFiles.Name = "listViewFiles";
-            this.listViewFiles.Size = new System.Drawing.Size(596, 345);
+            this.listViewFiles.Size = new System.Drawing.Size(733, 429);
             this.listViewFiles.TabIndex = 0;
             this.listViewFiles.UseCompatibleStateImageBehavior = false;
             this.listViewFiles.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -478,6 +481,21 @@
             // columnFileShowIn
             // 
             this.columnFileShowIn.Text = "Im Kontextmenü anzeigen";
+            // 
+            // mainMenuTools
+            // 
+            this.mainMenuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolsMenuMd5Hash});
+            this.mainMenuTools.Name = "mainMenuTools";
+            this.mainMenuTools.Size = new System.Drawing.Size(48, 20);
+            this.mainMenuTools.Text = "&Tools";
+            // 
+            // toolsMenuMd5Hash
+            // 
+            this.toolsMenuMd5Hash.Name = "toolsMenuMd5Hash";
+            this.toolsMenuMd5Hash.Size = new System.Drawing.Size(152, 22);
+            this.toolsMenuMd5Hash.Text = "MD5 Hash";
+            this.toolsMenuMd5Hash.Click += new System.EventHandler(this.toolsMenuMd5Hash_Click);
             // 
             // FormMain
             // 
@@ -566,5 +584,7 @@
         private System.Windows.Forms.ColumnHeader columnFileComment;
         private System.Windows.Forms.ColumnHeader columnFilePath;
         private System.Windows.Forms.ColumnHeader columnFileShowIn;
+        private System.Windows.Forms.ToolStripMenuItem mainMenuTools;
+        private System.Windows.Forms.ToolStripMenuItem toolsMenuMd5Hash;
     }
 }

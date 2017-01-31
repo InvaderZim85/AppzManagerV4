@@ -769,5 +769,13 @@ namespace AppzManagerV4.Forms
             Properties.Settings.Default.Height = Size.Height;
             Properties.Settings.Default.Save();
         }
+        /// <summary>
+        /// Occurs when the user hits the md5 hash menu item in the tools menu
+        /// </summary>
+        private void toolsMenuMd5Hash_Click(object sender, EventArgs e)
+        {
+            var md5Form = new FormMd5Hash();
+            md5Form.ShowDialog();
+        }
     }
 }

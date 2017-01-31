@@ -79,6 +79,12 @@
     <Compile Include="Data\FileRepo.cs" />
     <Compile Include="Data\FolderRepo.cs" />
     <Compile Include="Data\GroupRepo.cs" />
+    <Compile Include="Forms\FormMd5Hash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormMd5Hash.Designer.cs">
+      <DependentUpon>FormMd5Hash.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -136,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormMd5Hash.resx">
+      <DependentUpon>FormMd5Hash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

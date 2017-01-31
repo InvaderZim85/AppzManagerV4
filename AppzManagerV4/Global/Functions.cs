@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using AppzManagerV4.Business;
 using AppzManagerV4.DataObjects;
@@ -392,6 +393,24 @@ namespace AppzManagerV4.Global
                 return Resources.File_Dll;
 
             return Resources.File_Default;
+        }
+        /// <summary>
+        /// Calculates the md5 hash for a file
+        /// </summary>
+        /// <param name="filepath">The filepath</param>
+        /// <returns>The md5 hash</returns>
+        public static string GetMd5Hash(string filepath)
+        {
+            if (string.IsNullOrEmpty(filepath))
+                return "";
+
+            using (var stream = File.OpenRead(filepath))
+            {
+                using (var md5 = MD5.Create())
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "");
+                }
+            }
         }
     }
 }
