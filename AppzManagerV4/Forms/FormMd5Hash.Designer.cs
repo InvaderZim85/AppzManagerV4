@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMd5Hash));
             this.lblFile = new System.Windows.Forms.Label();
             this.txtFilepath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
@@ -74,6 +75,7 @@
             // btnGetMd5Hash
             // 
             this.btnGetMd5Hash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetMd5Hash.Enabled = false;
             this.btnGetMd5Hash.Location = new System.Drawing.Point(377, 12);
             this.btnGetMd5Hash.Name = "btnGetMd5Hash";
             this.btnGetMd5Hash.Size = new System.Drawing.Size(75, 23);
@@ -115,6 +117,7 @@
             // btnCopy
             // 
             this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCopy.Enabled = false;
             this.btnCopy.Location = new System.Drawing.Point(377, 38);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 23);
@@ -131,10 +134,12 @@
             this.txtMd5Original.Name = "txtMd5Original";
             this.txtMd5Original.Size = new System.Drawing.Size(254, 20);
             this.txtMd5Original.TabIndex = 8;
+            this.txtMd5Original.TextChanged += new System.EventHandler(this.txtMd5Original_TextChanged);
             // 
             // btnCompare
             // 
             this.btnCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCompare.Enabled = false;
             this.btnCompare.Location = new System.Drawing.Point(377, 64);
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Size = new System.Drawing.Size(75, 23);
@@ -177,6 +182,7 @@
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtFilepath);
             this.Controls.Add(this.lblFile);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMd5Hash";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MD5 Hash";

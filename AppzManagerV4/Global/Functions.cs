@@ -408,7 +408,7 @@ namespace AppzManagerV4.Global
             {
                 using (var md5 = MD5.Create())
                 {
-                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "");
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
                 }
             }
         }

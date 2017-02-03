@@ -32,6 +32,8 @@ namespace AppzManagerV4.Forms
             {
                 txtFilepath.Text = dialog.FileName;
             }
+
+            btnGetMd5Hash.Enabled = !string.IsNullOrEmpty(txtFilepath.Text);
         }
         /// <summary>
         /// Occurs when the user hits the md5 hash button
@@ -40,13 +42,16 @@ namespace AppzManagerV4.Forms
         {
             if (!string.IsNullOrEmpty(txtFilepath.Text))
                 txtHash.Text = Functions.GetMd5Hash(txtFilepath.Text);
+
+            btnCopy.Enabled = !string.IsNullOrEmpty(txtHash.Text);
         }
         /// <summary>
         /// Occurs when the user hits the copy button
         /// </summary>
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(txtHash.Text);
+            if (!string.IsNullOrEmpty(txtHash.Text))
+                Clipboard.SetText(txtHash.Text);
         }
         /// <summary>
         /// Occurs when the user hits the close button
@@ -70,6 +75,13 @@ namespace AppzManagerV4.Forms
                 lblHashCompareInfo.Text = "Hast-Werte stimmen nicht überein.";
                 lblHashCompareInfo.ForeColor = Color.Red;
             }
+        }
+        /// <summary>
+        /// Occurs when the text in the original box is changed
+        /// </summary>
+        private void txtMd5Original_TextChanged(object sender, EventArgs e)
+        {
+            btnCompare.Enabled = !string.IsNullOrEmpty(txtMd5Original.Text);
         }
     }
 }
