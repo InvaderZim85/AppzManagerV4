@@ -70,5 +70,17 @@ namespace AppzManagerV4.Properties {
                 this["Height"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ViewInfo {
+            get {
+                return ((bool)(this["ViewInfo"]));
+            }
+            set {
+                this["ViewInfo"] = value;
+            }
+        }
     }
 }

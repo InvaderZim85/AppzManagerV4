@@ -66,17 +66,20 @@ namespace AppzManagerV4.Forms
                 listViewApps.View = View.LargeIcon;
                 listViewFolders.View = View.LargeIcon;
                 listViewFiles.View = View.LargeIcon;
-                viewMenuIcons.Checked = true;
-                viewMenuList.Checked = false;
+                listViewMenuIcons.Checked = true;
+                listViewMenuDetails.Checked = false;
             }
             else
             {
                 listViewApps.View = View.Details;
                 listViewFolders.View = View.Details;
                 listViewFiles.View = View.Details;
-                viewMenuIcons.Checked = false;
-                viewMenuList.Checked = true;
+                listViewMenuIcons.Checked = false;
+                listViewMenuDetails.Checked = true;
             }
+
+            listViewMenuDetails.Checked = Properties.Settings.Default.ViewInfo;
+            infoControl.Visible = Properties.Settings.Default.ViewInfo;
         }
         /// <summary>
         /// Loads the entries
@@ -396,30 +399,44 @@ namespace AppzManagerV4.Forms
         private void viewMenu_Click(object sender, EventArgs e)
         {
             var viewStyle = 1;
-            if (sender == viewMenuIcons)
+            var listViewMenu = false;
+            if (sender == listViewMenuIcons)
             {
+                listViewMenu = true;
                 listViewApps.View = View.LargeIcon;
                 listViewFolders.View = View.LargeIcon;
-                viewMenuIcons.Checked = true;
-                viewMenuList.Checked = false;
+                listViewMenuIcons.Checked = true;
+                listViewMenuDetails.Checked = false;
             }
-            else
+            else if (sender == listViewMenuDetails)
             {
+                listViewMenu = true;
                 viewStyle = 2;
                 listViewApps.View = View.Details;
                 listViewFolders.View = View.Details;
-                viewMenuIcons.Checked = false;
-                viewMenuList.Checked = true;
+                listViewMenuIcons.Checked = false;
+                listViewMenuDetails.Checked = true;
+            }
+            else if (sender == viewMenuDetails)
+            {
+                infoControl.Visible = !viewMenuDetails.Checked;
+                viewMenuDetails.Checked = !viewMenuDetails.Checked;
             }
 
+            if (listViewMenu)
+            {
+                listViewApps.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                listViewApps.GridLines = true;
 
-            listViewApps.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            listViewApps.GridLines = true;
+                listViewFolders.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                listViewFolders.GridLines = true;
 
-            listViewFolders.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            listViewFolders.GridLines = true;
+                listViewFiles.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                listViewFiles.GridLines = true;
+            }
 
             Properties.Settings.Default.ViewStyle = viewStyle;
+            Properties.Settings.Default.ViewInfo = infoControl.Visible;
             Properties.Settings.Default.Save();
         }
         /// <summary>
@@ -572,13 +589,20 @@ namespace AppzManagerV4.Forms
                     if (app == null)
                         return;
 
-                    info = app.Name;
-                    if (!string.IsNullOrEmpty(app.Comment))
-                        info += $" - {app.Comment}";
-                    if (!string.IsNullOrEmpty(app.Shortcut))
-                        info += $" (Shortcut: {app.Shortcut})";
-                    if (app.Autostart)
-                        info += " - Autostart aktiviert";
+                    if (infoControl.Visible)
+                    {
+                        infoControl.ShowInfo(app, _selectedRegion);
+                    }
+                    else
+                    {
+                        info = app.Name;
+                        if (!string.IsNullOrEmpty(app.Comment))
+                            info += $" - {app.Comment}";
+                        if (!string.IsNullOrEmpty(app.Shortcut))
+                            info += $" (Shortcut: {app.Shortcut})";
+                        if (app.Autostart)
+                            info += " - Autostart aktiviert";
+                    }
                 }
             }
             else if (_selectedRegion == GlobalEnums.RegionType.Folder)
@@ -588,12 +612,18 @@ namespace AppzManagerV4.Forms
                     var folder = listViewFolders.SelectedItems[0].Tag as FolderModel;
                     if (folder == null)
                         return;
-
-                    info = folder.Name;
-                    if (!string.IsNullOrEmpty(folder.Comment))
-                        info += $" - {folder.Comment}";
-                    if (!string.IsNullOrEmpty(folder.Shortcut))
-                        info += $" (Shortcut: {folder.Shortcut})";
+                    if (infoControl.Visible)
+                    {
+                        infoControl.ShowInfo(folder, _selectedRegion);
+                    }
+                    else
+                    {
+                        info = folder.Name;
+                        if (!string.IsNullOrEmpty(folder.Comment))
+                            info += $" - {folder.Comment}";
+                        if (!string.IsNullOrEmpty(folder.Shortcut))
+                            info += $" (Shortcut: {folder.Shortcut})";
+                    }
                 }
             }
             else if (_selectedRegion == GlobalEnums.RegionType.File)
@@ -604,11 +634,18 @@ namespace AppzManagerV4.Forms
                     if (file == null)
                         return;
 
-                    info = file.Name;
-                    if (!string.IsNullOrEmpty(file.Comment))
-                        info += $" - {file.Comment}";
-                    if (!string.IsNullOrEmpty(file.Shortcut))
-                        info += $" (Shortcut: {file.Shortcut})";
+                    if (infoControl.Visible)
+                    {
+                        infoControl.ShowInfo(file, _selectedRegion);
+                    }
+                    else
+                    {
+                        info = file.Name;
+                        if (!string.IsNullOrEmpty(file.Comment))
+                            info += $" - {file.Comment}";
+                        if (!string.IsNullOrEmpty(file.Shortcut))
+                            info += $" (Shortcut: {file.Shortcut})";
+                    }
                 }
             }
             toolStripInfo.Text = info;

@@ -412,5 +412,45 @@ namespace AppzManagerV4.Global
                 }
             }
         }
+        /// <summary>
+        /// Calculates the size of a folder
+        /// </summary>
+        /// <param name="dir">The directory info</param>
+        /// <returns>The total size of the folder</returns>
+        public static string GetFolderSize(DirectoryInfo dir)
+        {
+            var files = dir.GetFiles("*", SearchOption.AllDirectories);
+
+            var result = files.Sum(file => file.Length);
+
+            var sizeKb = (decimal) result / 1024;
+            var sizeMb = sizeKb / 1024;
+            var sizeGb = sizeMb / 1024;
+
+            var fileCount = files.Length > 1 ? $"{files.Length:N0} Dateien" : "1 Datei";
+
+            return sizeMb > 1024
+                ? $"{sizeGb:N} GB ({sizeKb:N} KB) - {fileCount}"
+                : sizeKb > 1024 
+                    ? $"{sizeMb:N} MB ({sizeKb:N} KB) - {fileCount}" 
+                    : $"{sizeKb:N} - {fileCount}";
+        }
+        /// <summary>
+        /// Calculates the size of a file
+        /// </summary>
+        /// <param name="file">The file info</param>
+        /// <returns>The size of the file</returns>
+        public static string GetFileSize(FileInfo file)
+        {
+            var sizeKb = (decimal)file.Length / 1024;
+            var sizeMb = sizeKb / 1024;
+            var sizeGb = sizeMb / 1024;
+
+            return sizeMb > 1024
+                ? $"{sizeGb:N} GB ({sizeKb:N} KB)"
+                : sizeKb > 1024
+                    ? $"{sizeMb:N} MB ({sizeKb:N} KB)"
+                    : $"{sizeKb:N} KB";
+        }
     }
 }

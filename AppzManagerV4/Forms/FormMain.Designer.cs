@@ -63,11 +63,11 @@
             this.dataMenuImport = new System.Windows.Forms.ToolStripMenuItem();
             this.programMenuClose = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuView = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenuIcons = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenuList = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuNewEntry = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuGroups = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuReload = new System.Windows.Forms.ToolStripMenuItem();
+            this.mainMenuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsMenuMd5Hash = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStripMainForm = new System.Windows.Forms.StatusStrip();
             this.toolStripDate = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripInfo = new System.Windows.Forms.ToolStripStatusLabel();
@@ -83,8 +83,11 @@
             this.columnFileComment = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFileShowIn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.mainMenuTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsMenuMd5Hash = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoControl = new AppzManagerV4.Forms.Controls.InfoControl();
+            this.viewMenuDetails = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenuListView = new System.Windows.Forms.ToolStripMenuItem();
+            this.listViewMenuIcons = new System.Windows.Forms.ToolStripMenuItem();
+            this.listViewMenuDetails = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.tabPageFolders.SuspendLayout();
             this.menuStripMainForm.SuspendLayout();
@@ -185,7 +188,7 @@
             this.tabPageFolders.Location = new System.Drawing.Point(4, 22);
             this.tabPageFolders.Name = "tabPageFolders";
             this.tabPageFolders.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFolders.Size = new System.Drawing.Size(739, 435);
+            this.tabPageFolders.Size = new System.Drawing.Size(739, 323);
             this.tabPageFolders.TabIndex = 1;
             this.tabPageFolders.Text = "Ordner";
             this.tabPageFolders.UseVisualStyleBackColor = true;
@@ -205,7 +208,7 @@
             this.listViewFolders.LargeImageList = this.imageList;
             this.listViewFolders.Location = new System.Drawing.Point(3, 3);
             this.listViewFolders.Name = "listViewFolders";
-            this.listViewFolders.Size = new System.Drawing.Size(733, 429);
+            this.listViewFolders.Size = new System.Drawing.Size(733, 317);
             this.listViewFolders.TabIndex = 0;
             this.listViewFolders.UseCompatibleStateImageBehavior = false;
             this.listViewFolders.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -305,25 +308,11 @@
             // mainMenuView
             // 
             this.mainMenuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewMenuIcons,
-            this.viewMenuList});
+            this.viewMenuListView,
+            this.viewMenuDetails});
             this.mainMenuView.Name = "mainMenuView";
             this.mainMenuView.Size = new System.Drawing.Size(59, 20);
             this.mainMenuView.Text = "&Ansicht";
-            // 
-            // viewMenuIcons
-            // 
-            this.viewMenuIcons.Name = "viewMenuIcons";
-            this.viewMenuIcons.Size = new System.Drawing.Size(102, 22);
-            this.viewMenuIcons.Text = "&Icons";
-            this.viewMenuIcons.Click += new System.EventHandler(this.viewMenu_Click);
-            // 
-            // viewMenuList
-            // 
-            this.viewMenuList.Name = "viewMenuList";
-            this.viewMenuList.Size = new System.Drawing.Size(102, 22);
-            this.viewMenuList.Text = "&Liste";
-            this.viewMenuList.Click += new System.EventHandler(this.viewMenu_Click);
             // 
             // mainMenuNewEntry
             // 
@@ -345,6 +334,21 @@
             this.mainMenuReload.Size = new System.Drawing.Size(73, 20);
             this.mainMenuReload.Text = "Neu &laden";
             this.mainMenuReload.Click += new System.EventHandler(this.mainMenuReload_Click);
+            // 
+            // mainMenuTools
+            // 
+            this.mainMenuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolsMenuMd5Hash});
+            this.mainMenuTools.Name = "mainMenuTools";
+            this.mainMenuTools.Size = new System.Drawing.Size(47, 20);
+            this.mainMenuTools.Text = "&Tools";
+            // 
+            // toolsMenuMd5Hash
+            // 
+            this.toolsMenuMd5Hash.Name = "toolsMenuMd5Hash";
+            this.toolsMenuMd5Hash.Size = new System.Drawing.Size(129, 22);
+            this.toolsMenuMd5Hash.Text = "MD5 Hash";
+            this.toolsMenuMd5Hash.Click += new System.EventHandler(this.toolsMenuMd5Hash_Click);
             // 
             // statusStripMainForm
             // 
@@ -378,7 +382,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 24);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(747, 461);
+            this.tabControl.Size = new System.Drawing.Size(747, 349);
             this.tabControl.TabIndex = 5;
             this.tabControl.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl_Selected);
             // 
@@ -388,7 +392,7 @@
             this.tabPageApps.Location = new System.Drawing.Point(4, 22);
             this.tabPageApps.Name = "tabPageApps";
             this.tabPageApps.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageApps.Size = new System.Drawing.Size(739, 435);
+            this.tabPageApps.Size = new System.Drawing.Size(739, 323);
             this.tabPageApps.TabIndex = 0;
             this.tabPageApps.Text = "Anwendungen";
             this.tabPageApps.UseVisualStyleBackColor = true;
@@ -412,7 +416,7 @@
             this.listViewApps.LargeImageList = this.imageList;
             this.listViewApps.Location = new System.Drawing.Point(3, 3);
             this.listViewApps.Name = "listViewApps";
-            this.listViewApps.Size = new System.Drawing.Size(733, 429);
+            this.listViewApps.Size = new System.Drawing.Size(733, 317);
             this.listViewApps.TabIndex = 0;
             this.listViewApps.UseCompatibleStateImageBehavior = false;
             this.listViewApps.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -434,7 +438,7 @@
             this.tabPageFiles.Location = new System.Drawing.Point(4, 22);
             this.tabPageFiles.Name = "tabPageFiles";
             this.tabPageFiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageFiles.Size = new System.Drawing.Size(739, 435);
+            this.tabPageFiles.Size = new System.Drawing.Size(739, 323);
             this.tabPageFiles.TabIndex = 2;
             this.tabPageFiles.Text = "Dateien";
             this.tabPageFiles.UseVisualStyleBackColor = true;
@@ -454,7 +458,7 @@
             this.listViewFiles.LargeImageList = this.imageList;
             this.listViewFiles.Location = new System.Drawing.Point(3, 3);
             this.listViewFiles.Name = "listViewFiles";
-            this.listViewFiles.Size = new System.Drawing.Size(733, 429);
+            this.listViewFiles.Size = new System.Drawing.Size(733, 317);
             this.listViewFiles.TabIndex = 0;
             this.listViewFiles.UseCompatibleStateImageBehavior = false;
             this.listViewFiles.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
@@ -482,20 +486,43 @@
             // 
             this.columnFileShowIn.Text = "Im Kontextmenü anzeigen";
             // 
-            // mainMenuTools
+            // infoControl
             // 
-            this.mainMenuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolsMenuMd5Hash});
-            this.mainMenuTools.Name = "mainMenuTools";
-            this.mainMenuTools.Size = new System.Drawing.Size(48, 20);
-            this.mainMenuTools.Text = "&Tools";
+            this.infoControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.infoControl.Location = new System.Drawing.Point(0, 373);
+            this.infoControl.Name = "infoControl";
+            this.infoControl.Size = new System.Drawing.Size(747, 112);
+            this.infoControl.TabIndex = 1;
             // 
-            // toolsMenuMd5Hash
+            // viewMenuDetails
             // 
-            this.toolsMenuMd5Hash.Name = "toolsMenuMd5Hash";
-            this.toolsMenuMd5Hash.Size = new System.Drawing.Size(152, 22);
-            this.toolsMenuMd5Hash.Text = "MD5 Hash";
-            this.toolsMenuMd5Hash.Click += new System.EventHandler(this.toolsMenuMd5Hash_Click);
+            this.viewMenuDetails.Name = "viewMenuDetails";
+            this.viewMenuDetails.Size = new System.Drawing.Size(159, 22);
+            this.viewMenuDetails.Text = "Details anzeigen";
+            this.viewMenuDetails.Click += new System.EventHandler(this.viewMenu_Click);
+            // 
+            // viewMenuListView
+            // 
+            this.viewMenuListView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.listViewMenuIcons,
+            this.listViewMenuDetails});
+            this.viewMenuListView.Name = "viewMenuListView";
+            this.viewMenuListView.Size = new System.Drawing.Size(159, 22);
+            this.viewMenuListView.Text = "Übersicht";
+            // 
+            // listViewMenuIcons
+            // 
+            this.listViewMenuIcons.Name = "listViewMenuIcons";
+            this.listViewMenuIcons.Size = new System.Drawing.Size(152, 22);
+            this.listViewMenuIcons.Text = "&Icons";
+            this.listViewMenuIcons.Click += new System.EventHandler(this.viewMenu_Click);
+            // 
+            // listViewMenuDetails
+            // 
+            this.listViewMenuDetails.Name = "listViewMenuDetails";
+            this.listViewMenuDetails.Size = new System.Drawing.Size(152, 22);
+            this.listViewMenuDetails.Text = "&Details";
+            this.listViewMenuDetails.Click += new System.EventHandler(this.viewMenu_Click);
             // 
             // FormMain
             // 
@@ -505,6 +532,7 @@
             this.ClientSize = new System.Drawing.Size(747, 509);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStripMainForm);
+            this.Controls.Add(this.infoControl);
             this.Controls.Add(this.statusStripMainForm);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
@@ -562,8 +590,6 @@
         private System.Windows.Forms.ToolStripMenuItem mainMenuProgram;
         private System.Windows.Forms.ToolStripMenuItem programMenuClose;
         private System.Windows.Forms.ToolStripMenuItem mainMenuView;
-        private System.Windows.Forms.ToolStripMenuItem viewMenuIcons;
-        private System.Windows.Forms.ToolStripMenuItem viewMenuList;
         private System.Windows.Forms.ToolStripMenuItem mainMenuNewEntry;
         private System.Windows.Forms.ToolStripMenuItem mainMenuGroups;
         private System.Windows.Forms.ToolStripMenuItem mainMenuReload;
@@ -586,5 +612,10 @@
         private System.Windows.Forms.ColumnHeader columnFileShowIn;
         private System.Windows.Forms.ToolStripMenuItem mainMenuTools;
         private System.Windows.Forms.ToolStripMenuItem toolsMenuMd5Hash;
+        private Controls.InfoControl infoControl;
+        private System.Windows.Forms.ToolStripMenuItem viewMenuListView;
+        private System.Windows.Forms.ToolStripMenuItem listViewMenuIcons;
+        private System.Windows.Forms.ToolStripMenuItem listViewMenuDetails;
+        private System.Windows.Forms.ToolStripMenuItem viewMenuDetails;
     }
 }
