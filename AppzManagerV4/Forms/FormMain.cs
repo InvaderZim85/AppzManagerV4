@@ -51,7 +51,6 @@ namespace AppzManagerV4.Forms
         public FormMain()
         {
             InitializeComponent();
-            InitForm();
         }
         /// <summary>
         /// Inits the form
@@ -355,6 +354,7 @@ namespace AppzManagerV4.Forms
         /// </summary>
         private void FormMain_Load(object sender, EventArgs e)
         {
+            InitForm();
             LoadEntries();
             clockTimer.Start();
 
